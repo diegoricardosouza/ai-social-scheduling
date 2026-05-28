@@ -19,6 +19,7 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Skeleton } from "../ui/skeleton";
+import { GenerateIdeasPopover } from "./GenerateIdeasPopover";
 import { IdeaDialog } from "./IdeaDialog";
 
 type Column = {
@@ -210,6 +211,34 @@ export function IdeaKanban() {
     }
   }
 
+  const handleGeneratedIdea = (title: string, description: string) => {
+    const targetColumnId = columns[0]?.id;
+    if (!targetColumnId) return;
+
+    const newIdea: IdeaType = {
+      id: `temp-${Date.now()}`,
+      title,
+      description,
+      columnId: targetColumnId,
+    };
+
+    const newColumns = columns.map((col) =>
+      col.id === targetColumnId
+        ? {
+          ...col,
+          ideas: [newIdea, ...col.ideas]
+        }
+        : col
+    )
+    setColumns(newColumns);
+    saveIdeaMutation.mutate({
+      title: title,
+      description: description,
+      columnId: targetColumnId,
+      sortOrder: 0
+    });
+  }
+
   return (
     <>
       <div className="flex flex-col overflow-hidden">
@@ -222,7 +251,7 @@ export function IdeaKanban() {
           </div>
           <div className="flex items-center gap-3">
             {/* //GenerateIdea popover */}
-            {/* <GenerateIdeasPopover onGenerated={handleGeneratedIdea} /> */}
+            <GenerateIdeasPopover onGenerated={handleGeneratedIdea} />
             <Button variant="outline" className="gap-2"
               onClick={() => handleAddIdea(columns[0]?.id ?? "")}
             >
