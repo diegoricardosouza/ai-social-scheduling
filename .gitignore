@@ -40,6 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+dev-wsl.sh
+CLAUDE.md
+AGENTS.md
+
 # InsForge & AI agent skills
 .insforge
 .agent
