@@ -4,6 +4,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useQueryState } from "nuqs"
 import { useState } from "react"
 import { CreatePostDialog } from "./CreatePostDialog"
+import { EditPostDialog } from "./EditPostDialog"
 import { PostCalendar } from "./PostCalendar"
 import { ScheduleToolbar } from "./ScheduleToolbar"
 
@@ -97,7 +98,7 @@ export function CalendarView() {
         </div>
       </div>
 
-      {/* <EditPostDialog
+      <EditPostDialog
         open={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
         post={selectedPostForEdit ? {
@@ -113,7 +114,7 @@ export function CalendarView() {
           } : null,
           // status: selectedPostForEdit.status
         } : null}
-      /> */}
+      />
 
       <CreatePostDialog
         open={isCreateDialogOpen}

@@ -21,6 +21,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Skeleton } from "../ui/skeleton";
 import { Spinner } from "../ui/spinner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { AIAssistant } from "./AIAssistant";
 import { IdeasList } from "./IdeasList";
 import { PreviewPanel } from "./preview";
 import { ScheduleDatePicker } from "./ScheduleDatePicker";
@@ -519,7 +520,7 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
                 <div className="py-4 flex-1 flex flex-col h-full">
                   {selectedRightTab === "ai" && (
                     <div className="px-6">
-                      {/* <AIAssistant
+                      <AIAssistant
                         content={channelContent[activeAccordion]?.text ||
                           globalContent?.text || ""
                         }
@@ -539,7 +540,7 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
                             }
                           }))
                         }}
-                      /> */}
+                      />
                     </div>
                   )}
 

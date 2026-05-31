@@ -5,6 +5,7 @@ import { ImageObject } from "@/types/post.type"
 import { Shapes } from "lucide-react"
 import { useEffect, useState } from "react"
 import { ContentTextarea } from "../ContentTextarea"
+import { AIAssistant } from "../schedule/AIAssistant"
 import { Button } from "../ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
@@ -133,12 +134,12 @@ export function IdeaDialog({
           {showAI && (
             <div className="w-[340px] shrink-0 border-l border-border bg-muted/30">
               <div className="p-4">
-                {/* <AIAssistant
+                <AIAssistant
                   content={`${title}\n\n${description}`}
                   onGenerate={(content: string) => {
                     setDescription(content)
                   }}
-                /> */}
+                />
               </div>
             </div>
           )}

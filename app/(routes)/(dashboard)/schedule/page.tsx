@@ -61,8 +61,7 @@ function SchedulePageContent() {
 
       <div className="flex-1 overflow-hidden">
         {activeView === "list" ? (
-          // <ListView setCreatePostModalOpen={setCreatePostModalOpen} />
-          <ListView />
+          <ListView setCreatePostModalOpen={setCreatePostModalOpen} />
         ) : (
           <CalendarView />
         )}
