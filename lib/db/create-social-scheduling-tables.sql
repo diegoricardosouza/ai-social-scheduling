@@ -30,7 +30,16 @@ insert into channel_types (type, name, color, character_limit) values
   ('TIKTOK',    'Tiktok',      '#000000', 100)
 on conflict (type) do nothing;
 
--- 2. USER CHANNELS
+alter table public.channel_types enable row level security;
+alter table public.channel_types force row level security;
+
+drop policy if exists "channel_types_public_read" on public.channel_types;
+create policy "channel_types_public_read"
+  on public.channel_types
+  for select
+  using (true);
+
+-- USER CHANNELS
 -- One row per connected social account
 create table if not exists user_channels (
   id               uuid primary key default gen_random_uuid(),
@@ -71,6 +80,15 @@ insert into idea_groups (name) values
   ('In Progress'),
   ('Done')
 on conflict (name) do nothing;
+
+alter table public.idea_groups enable row level security;
+alter table public.idea_groups force row level security;
+
+drop policy if exists "idea_groups_public_read" on public.idea_groups;
+create policy "idea_groups_public_read"
+  on public.idea_groups
+  for select
+  using (true);
 
 -- IDEAS
 create table if not exists ideas (

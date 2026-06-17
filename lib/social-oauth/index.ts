@@ -19,6 +19,8 @@ function getConfig(type: ChannelTypeEnum) {
   }
 }
 
+
+
 async function requestToken(
   type: ChannelTypeEnum,
   body: URLSearchParams,
@@ -47,6 +49,7 @@ async function requestToken(
 
   return data
 }
+
 
 function createProvider(type: ChannelTypeEnum, opts: { pkce?: boolean } = {}): OAuthProvider {
   return {
@@ -92,6 +95,7 @@ function createProvider(type: ChannelTypeEnum, opts: { pkce?: boolean } = {}): O
         refreshToken: data.refresh_token ?? null,
         expiresAt,
       }
+
     },
     refreshToken: async ({ refreshToken, redirectUri }) => {
       const config = getConfig(type);
@@ -150,8 +154,9 @@ function createProvider(type: ChannelTypeEnum, opts: { pkce?: boolean } = {}): O
   }
 }
 
+
 const PROVIDERS: Record<ChannelTypeEnum, any> = {
-  [ChannelTypeEnum.TWITTER]: createProvider(ChannelTypeEnum.TWITTER),
+  [ChannelTypeEnum.TWITTER]: createProvider(ChannelTypeEnum.TWITTER, { pkce: true }),
   [ChannelTypeEnum.LINKEDIN]: createProvider(ChannelTypeEnum.LINKEDIN),
   [ChannelTypeEnum.INSTAGRAM]: createProvider(ChannelTypeEnum.INSTAGRAM),
   [ChannelTypeEnum.FACEBOOK]: createProvider(ChannelTypeEnum.FACEBOOK),
@@ -163,4 +168,18 @@ const PROVIDERS: Record<ChannelTypeEnum, any> = {
 
 export function getOAuthProvider(type: ChannelTypeEnum) {
   return PROVIDERS[type];
+}
+
+export async function refreshOauthToken(
+  type: ChannelTypeEnum,
+  refreshToken: string,
+  redirectUri: string,
+) {
+  console.log("refreshing token", type, refreshToken, redirectUri)
+  const provider = getOAuthProvider(type);
+  if (!provider.refreshToken) {
+    throw new Error('Refresh token not supported for this provider');
+  }
+  const result = await provider.refreshToken({ refreshToken, redirectUri });
+  return result;
 }

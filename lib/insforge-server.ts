@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { auth } from '@clerk/nextjs/server';
 import { createClient, type InsForgeClient } from '@insforge/sdk';
 
@@ -24,7 +25,10 @@ async function refreshAuthToken(client: InsForgeClient, retries = 3): Promise<vo
     } else {
       throw new Error('No token received from Clerk');
     }
-  } catch (err) {
+  } catch (err: any) {
+    if (err?.errors?.[0]?.code === 'resource_not_found') {
+      return;
+    }
     // if (retries > 0) {
     //   console.log(`Retrying token refresh... (${retries} retries left)`);
     //   setTimeout(() => refreshAuthToken(client, retries - 1), 1000);

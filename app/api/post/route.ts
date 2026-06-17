@@ -108,13 +108,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No valid posts provided" }, { status: 400 })
     }
 
-    // const isPaidPlan = has({ plan: "pro" }) || has({ plan: "premium" })
-    // if (!isPaidPlan) {
-    //   const canCreatePost = await checkCreatePostLimit(insforge, userId)
-    //   if (!canCreatePost) {
-    //     return NextResponse.json({ error: "You have reached your post limit, upgrade" }, { status: 403 })
-    //   }
-    // }
+    const isPaidPlan = has({ plan: "pro" }) || has({ plan: "premium" })
+    if (!isPaidPlan) {
+      const canCreatePost = await checkCreatePostLimit(insforge, userId)
+      if (!canCreatePost) {
+        return NextResponse.json({ error: "You have reached your post limit, upgrade" }, { status: 403 })
+      }
+    }
 
     const invalidPost = normalizedPosts.find((post) => !post.content);
     if (invalidPost) {

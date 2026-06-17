@@ -389,7 +389,7 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
                       value={globalContent?.text || ""}
                       images={globalContent?.images || []}
                       placeholder="Write your main content here... It will be copied to channels when you select them"
-                      minHeight={270}
+                      minHeight={253}
                       showAIAssistant={true}
                       disabled={!hasConnectedChannel}
                       contentClass="text-sm placeholder:opacity-50 pt-0!"

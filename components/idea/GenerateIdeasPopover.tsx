@@ -36,7 +36,7 @@ export function GenerateIdeasPopover({ onGenerated }: GenerateIdeasPopoverProps)
 
   const canUseAI = !!subscription?.subscriptionItems?.some(item => {
     const planSlug = item.plan.slug
-    return planSlug === "pro" || planSlug === "business"
+    return planSlug === "pro" || planSlug === "premium"
   })
 
   const generateMutation = useMutation({

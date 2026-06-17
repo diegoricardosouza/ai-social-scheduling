@@ -130,7 +130,7 @@ export function ContentTextarea({
         style={{ minHeight: `${minHeight}px`, maxHeight: `${minHeight}px` }}
       />
 
-      <div className="shrink-0 space-y-0 -mt-4">
+      <div className="shrink-0 space-y-0 mt-4">
         {/* Image Upload Section */}
         <div className="flex items-center gap-3">
           {/* Add Image Button */}

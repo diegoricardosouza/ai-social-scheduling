@@ -78,7 +78,7 @@ export function IdeasList({ onSelect }: IdeasListProps) {
           </SelectContent>
         </Select>
       </div>
-      <div className="space-y-3 px-6 py-1 overflow-y-auto h-[550px]">
+      <div className="space-y-3 px-6 py-1 overflow-y-auto h-[510px] pb-3!">
         {isLoading && Array.from({ length: 4 }).map((_, index) => (
           <Card key={index}>
             <CardContent className="p-3 space-y-3">

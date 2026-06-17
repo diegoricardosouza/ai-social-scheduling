@@ -58,7 +58,7 @@ export function ScheduleToolbar({
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="ghost" size="lg" className="h-8 gap-1">
+            <Button variant="ghost" size="lg" className="h-8 gap-1 cursor-pointer">
               <Copy className="h-3.5 w-3.5" />
               <span className="font-medium text-sm text-muted-foreground!">
                 {statusOptions.find((s) => s.id === selectedStatus)?.label || "All Posts"}
@@ -69,10 +69,10 @@ export function ScheduleToolbar({
           <PopoverContent className="w-48 p-2" align="end" asChild>
             <div className="space-y-1">
               {statusOptions.map((option) => (
-                <button
+                <div
                   key={option.id}
                   className={cn(
-                    "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted transition-colors",
+                    "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted transition-colors cursor-pointer",
                     selectedStatus === option.id && "bg-muted font-medium"
                   )}
                   onClick={() => setSelectedStatus(option.id)}
@@ -82,7 +82,7 @@ export function ScheduleToolbar({
                     className="pointer-events-none"
                   />
                   <span>{option.label}</span>
-                </button>
+                </div>
               ))}
             </div>
           </PopoverContent>
@@ -92,7 +92,7 @@ export function ScheduleToolbar({
       {/* Channels Filter */}
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="lg" className="h-8 gap-1">
+          <Button variant="ghost" size="lg" className="h-8 gap-1 cursor-pointer">
             <LayoutGrid className="h-3.5 w-3.5" />
             <span className="font-medium text-sm text-muted-foreground!">
               Channels

@@ -84,7 +84,6 @@ export function AIAssistant({ className, content, channelId, onGenerate }: AIAss
         className
       )}
     >
-
       {!canUseAI && !isLoading && (
         <div className="mb-4 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200">
           <p className="text-sm font-medium">AI idea generation requires an upgrade</p>
