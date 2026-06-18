@@ -1,0 +1,50 @@
+{
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "connect": "Conectar",
+    "disconnect": "Desconectar",
+    "failedStartConection": "No se pudo iniciar la conexión.",
+    "failedDisconnectChannel": "No se pudo desconectar el canal",
+    "channelDisconnectedSuccessfully": "Canal desconectado con éxito"
+  },
+  "sidebar": {
+    "ideas": "Ideas",
+    "schedule": "Programación",
+    "billing": "Planes",
+    "settings": "Configuración",
+    "channels": "Canales",
+    "newPost": "Nueva Publicación",
+    "connectChannels": "Conectar Canales",
+    "connectChannel": "Conectar {name}",
+    "moreChannels": "Más Canales",
+    "channelsConnected": "{connected}/{total} canales conectados",
+    "connectError": "Error al conectar canal"
+  },
+  "ideas": {
+    "title": "Mis Ideas",
+    "empty": "Sin ideas aún",
+    "generate": "Generar ideas con IA"
+  },
+  "settings": {
+    "tab": {
+      "profile": "Perfil",
+      "channels": "Canales",
+      "appearance": "Apariencia"
+    },
+    "title": "Configuración",
+    "profileTitle": "Tu Perfil",
+    "profileDesc": "Gestiona la información de tu cuenta",
+    "channelTitle": "Canales",
+    "channelDesc": "Conecta tus cuentas de redes sociales para empezar a programar"
+  },
+  "errors": {
+    "USER_NOT_FOUND": "Usuario no encontrado",
+    "CHANNEL_TYPE_REQUIRED": "Tipo de canal es requerido",
+    "CHANNEL_TYPE_NOT_FOUND": "Tipo de canal no encontrado",
+    "CONNECT_CHANNEL_FAILED": "Error al conectar canal",
+    "DISCONNECT_CHANNEL_FAILED": "Error al desconectar canal"
+  }
+}

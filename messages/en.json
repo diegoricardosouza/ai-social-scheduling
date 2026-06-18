@@ -1,0 +1,50 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "failedStartConection": "Failed to start connection",
+    "failedDisconnectChannel": "Failed to disconnect channel",
+    "channelDisconnectedSuccessfully": "Channel disconnected successfully"
+  },
+  "sidebar": {
+    "ideas": "Ideas",
+    "schedule": "Schedule",
+    "billing": "Billing",
+    "settings": "Settings",
+    "channels": "Channels",
+    "newPost": "New Post",
+    "connectChannels": "Connect Channels",
+    "connectChannel": "Connect {name}",
+    "moreChannels": "More Channels",
+    "channelsConnected": "{connected}/{total} channels connected",
+    "connectError": "Failed to connect channel"
+  },
+  "ideas": {
+    "title": "My Ideas",
+    "empty": "No ideas yet",
+    "generate": "Generate ideas with AI"
+  },
+  "settings": {
+    "tab": {
+      "profile": "Profile",
+      "channels": "Channels",
+      "appearance": "Appearance"
+    },
+    "title": "Settings",
+    "profileTitle": "Your Profile",
+    "profileDesc": "Manage your account information",
+    "channelTitle": "Channels",
+    "channelDesc": "Connect your social media accounts to start scheduling"
+  },
+  "errors": {
+    "USER_NOT_FOUND": "User not found",
+    "CHANNEL_TYPE_REQUIRED": "Channel type is required",
+    "CHANNEL_TYPE_NOT_FOUND": "Channel type not found",
+    "CONNECT_CHANNEL_FAILED": "Failed to connect channel",
+    "DISCONNECT_CHANNEL_FAILED": "Failed to disconnect channel"
+  }
+}

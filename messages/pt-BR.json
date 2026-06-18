@@ -1,0 +1,50 @@
+{
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "loading": "Carregando...",
+    "error": "Ocorreu um erro",
+    "connect": "Conectar",
+    "disconnect": "Desconectar",
+    "failedStartConection": "Falha ao iniciar a conexão",
+    "failedDisconnectChannel": "Falha ao desconectar canal",
+    "channelDisconnectedSuccessfully": "Canal desconectado com sucesso"
+  },
+  "sidebar": {
+    "ideas": "Ideias",
+    "schedule": "Agendamentos",
+    "billing": "Planos",
+    "settings": "Configurações",
+    "channels": "Canais",
+    "newPost": "Novo Post",
+    "connectChannels": "Conectar Canais",
+    "connectChannel": "Conectar {name}",
+    "moreChannels": "Mais Canais",
+    "channelsConnected": "{connected}/{total} canais conectados",
+    "connectError": "Falha ao conectar canal"
+  },
+  "ideas": {
+    "title": "Minhas Ideias",
+    "empty": "Nenhuma ideia ainda",
+    "generate": "Gerar ideias com IA"
+  },
+  "settings": {
+    "tab": {
+      "profile": "Perfil",
+      "channels": "Canais",
+      "appearance": "Aparência"
+    },
+    "title": "Configurações",
+    "profileTitle": "Seu Perfil",
+    "profileDesc": "Gerencie as informações da sua conta",
+    "channelTitle": "Canais",
+    "channelDesc": "Conecte suas contas de redes sociais para começar a agendar"
+  },
+  "errors": {
+    "USER_NOT_FOUND": "Usuário não encontrado",
+    "CHANNEL_TYPE_REQUIRED": "Tipo de canal é obrigatório",
+    "CHANNEL_TYPE_NOT_FOUND": "Tipo de canal não encontrado",
+    "CONNECT_CHANNEL_FAILED": "Falha ao conectar canal",
+    "DISCONNECT_CHANNEL_FAILED": "Falha ao desconectar canal"
+  }
+}

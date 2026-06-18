@@ -8,35 +8,37 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUser } from "@clerk/nextjs";
 import { UserProfile } from "@clerk/react";
 import { Layers, Palette, User } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 
 export default function SettingsPage() {
   const { user } = useUser();
   const { theme, setTheme } = useTheme();
+  const t = useTranslations('settings')
 
   return (
     <div className="w-full">
       <div className="max-w-5xl mx-auto w-full h-full">
         <div className="py-4">
-          <h1 className="text-xl font-semibold">Settings</h1>
+          <h1 className="text-xl font-semibold">{t('title')}</h1>
         </div>
 
         <div>
           <Tabs defaultValue="channels">
             <div className="mb-6 w-full border-b py-2">
               <TabsList variant="line" className="w-fit space-x-4">
-                <TabsTrigger value="profile">
+                <TabsTrigger value="profile" className="cursor-pointer">
                   <User className="size-4" />
-                  Profile
+                  {t('tab.profile')}
                 </TabsTrigger>
-                <TabsTrigger value="channels">
+                <TabsTrigger value="channels" className="cursor-pointer">
                   <Layers className="size-4" />
-                  Channels
+                  {t('tab.channels')}
                 </TabsTrigger>
-                <TabsTrigger value="appearance">
+                <TabsTrigger value="appearance" className="cursor-pointer">
                   <Palette className="size-4" />
-                  Appearance
+                  {t('tab.appearance')}
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -44,8 +46,8 @@ export default function SettingsPage() {
             <TabsContent value="profile">
               <Card>
                 <CardHeader>
-                  <CardTitle>Your Profile</CardTitle>
-                  <CardDescription>Manage your account information</CardDescription>
+                  <CardTitle>{t('profileTitle')}</CardTitle>
+                  <CardDescription>{t('profileDesc')}</CardDescription>
                 </CardHeader>
 
                 <CardContent>

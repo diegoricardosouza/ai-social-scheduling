@@ -10,18 +10,18 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 export async function POST(request: NextRequest) {
   try {
     const { insforge, userId } = await getInsforgeServerClient();
-    if (!userId) return NextResponse.json({ error: "User not found" }, { status: 401 })
+    if (!userId) return NextResponse.json({ error: "USER_NOT_FOUND" }, { status: 401 })
 
     const { channelTypeId } = await request.json();
-    if (!channelTypeId) return NextResponse.json({ error: "Channel type ID is required" }, { status: 400 });
+    if (!channelTypeId) return NextResponse.json({ error: "CHANNEL_TYPE_REQUIRED" }, { status: 400 });
 
     const { data: channelType, error } = await insforge.database
-                .from("channel_types")
-                .select("id, type")
-                .eq("id", channelTypeId)
-                .single();
-    
-    if (error || !channelType) return NextResponse.json({ error: "Channel type not found" }, { status: 404 });
+      .from("channel_types")
+      .select("id, type")
+      .eq("id", channelTypeId)
+      .single();
+
+    if (error || !channelType) return NextResponse.json({ error: "CHANNEL_TYPE_NOT_FOUND" }, { status: 404 });
 
     const redirectTo = `${APP_URL}/settings`;
 
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         secure: true,
         sameSite: 'lax',
         path: '/',
-        maxAge: 60 * 10, // 10 minutes
+        maxAge: 60 * 10,
       })
     }
 
@@ -62,6 +62,6 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Error connecting channel:', error);
-    return NextResponse.json({ error: 'Failed to connect channel' }, { status: 500 });
+    return NextResponse.json({ error: "CONNECT_CHANNEL_FAILED" }, { status: 500 });
   }
 }

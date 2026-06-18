@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
+import { getLocale } from 'next-intl/server';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -22,18 +23,20 @@ export const metadata: Metadata = {
   description: "Create AI-powered social media scheduling for every platform in seconds. Lemon.ai is a platform that allows you to create social media scheduling for every platform in seconds.",
 };
 
-export default function RootLayout({
-  children,
+export default async function RootLayout({
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+
   return (
     <html
-      lang="pt-br"
+      lang={locale}
       suppressHydrationWarning
       className={`${geistSans.className} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <ClerkProvider>
           <QueryProvider>
             <ThemeProvider

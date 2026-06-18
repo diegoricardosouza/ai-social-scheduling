@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { getChannelIcon } from '@/constants/channels';
@@ -6,6 +7,7 @@ import { ChannelType } from "@/types/channel.type";
 import { PlusSignIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from 'next-intl';
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
 import { toast } from 'sonner';
@@ -16,6 +18,9 @@ import { Skeleton } from "../ui/skeleton";
 function ChannelTabContent() {
   const searchParams = useSearchParams()
   const queryClient = useQueryClient()
+  const t = useTranslations('settings')
+  const t2 = useTranslations('common')
+  const tErrors = useTranslations('errors');
 
   const { data: channelsData, isPending } = useQuery({
     queryKey: ["channels"],
@@ -50,14 +55,14 @@ function ChannelTabContent() {
         body: JSON.stringify({ channelTypeId }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || "Failed to start connection")
+      if (!res.ok) throw new Error(data.error || 'CONNECT_CHANNEL_FAILED')
       return data
     },
     onSuccess: ({ url }) => {
       window.location.href = url
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to start connection")
+      toast.error(tErrors(error.message as any))
     },
   })
 
@@ -69,16 +74,16 @@ function ChannelTabContent() {
         body: JSON.stringify({ userChannelId }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || "Failed to start connection")
+      if (!res.ok) throw new Error(data.error || 'DISCONNECT_CHANNEL_FAILED')
       return data
     },
     onSuccess: () => {
-      toast.success("Channel disconnected successfully")
+      toast.success(t2('channelDisconnectedSuccessfully'))
       queryClient.invalidateQueries({ queryKey: ["channels"] })
     },
     onError: (error: Error) => {
       console.error("Disconnect error:", error)
-      toast.error("Failed to disconnect channel")
+      toast.error(tErrors(error.message as any))
     },
   })
 
@@ -96,9 +101,9 @@ function ChannelTabContent() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Channels</CardTitle>
+        <CardTitle>{t('channelTitle')}</CardTitle>
         <CardDescription>
-          Connect your social media accounts to start scheduling
+          {t('channelDesc')}
         </CardDescription>
       </CardHeader>
 
@@ -155,7 +160,7 @@ function ChannelTabContent() {
                       disconnectMutation.isPending && disconnectMutation.variables === channel.user_channel_id) && (
                         <Spinner className='size-4' />
                       )} */}
-                    {channel.connected ? "Disconnect" : "Connect"}
+                    {channel.connected ? t2('disconnect') : t2('connect')}
                   </Button>
                 </div>
               )

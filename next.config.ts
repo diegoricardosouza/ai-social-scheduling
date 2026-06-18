@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import withNextIntl from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -8,6 +9,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "img.clerk.com",
       },
+      {
+        protocol: 'https',
+        hostname: 'flagcdn.com',
+      },
     ],
   },
   allowedDevOrigins: [
@@ -15,4 +20,4 @@ const nextConfig: NextConfig = {
   ]
 };
 
-export default nextConfig;
+export default withNextIntl('./i18n/request.ts')(nextConfig);
