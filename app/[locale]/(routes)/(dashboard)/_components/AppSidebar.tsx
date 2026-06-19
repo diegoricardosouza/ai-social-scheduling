@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { ChannelAvatar } from "@/components/ChannelAvatar";
@@ -26,14 +27,14 @@ export function AppSidebar() {
   const isCollapsed = state === "collapsed"
   const { user } = useUser()
   const [isCreatePostOpen, setIsCreatePostOpen] = useState<boolean>(false)
-  const t = useTranslations('sidebar') // ← novo
+  const t = useTranslations()
 
   // ← virou função pois usa t()
   const mainNav = [
-    { name: t('ideas'), href: "/ideas", icon: Lightbulb },
-    { name: t('schedule'), href: "/schedule", icon: Calendar },
-    { name: t('billing'), href: "/billing", icon: CreditCard },
-    { name: t('settings'), href: "/settings", icon: Settings },
+    { name: t('common.ideas'), href: "/ideas", icon: Lightbulb },
+    { name: t('common.schedule'), href: "/schedule", icon: Calendar },
+    { name: t('common.billing'), href: "/billing", icon: CreditCard },
+    { name: t('common.settings'), href: "/settings", icon: Settings },
   ];
 
   const connectMutation = useMutation({
@@ -44,14 +45,14 @@ export function AppSidebar() {
         body: JSON.stringify({ channelTypeId }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || "Failed to connect channel")
+      if (!res.ok) throw new Error(data.error || 'CONNECT_CHANNEL_FAILED')
       return data
     },
     onSuccess: ({ url }) => {
       window.location.href = url
     },
-    onError: () => {
-      toast.error(t('connectError')) // ← mudou
+    onError: (error: Error) => {
+      toast.error(t(`errors.${error.message}` as any))
     }
   })
 
@@ -89,7 +90,7 @@ export function AppSidebar() {
             onClick={() => setIsCreatePostOpen(true)}
           >
             <Plus className="size-4" />
-            {!isCollapsed && <span>{t('newPost')}</span>} {/* ← mudou */}
+            {!isCollapsed && <span>{t('sidebar.newPost')}</span>}
           </Button>
         </SidebarHeader>
 
@@ -118,7 +119,7 @@ export function AppSidebar() {
           {connectedChannels.length > 0 && (
             <SidebarGroup className={cn(isCollapsed && "px-1")}>
               <SidebarGroupLabel className="text-sm">
-                {t('channels')} {/* ← mudou */}
+                {t('common.channels')}
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
@@ -153,7 +154,7 @@ export function AppSidebar() {
 
           <SidebarGroup className={cn(isCollapsed && "px-1")}>
             <SidebarGroupLabel className="text-sm">
-              {t('connectChannels')} {/* ← mudou */}
+              {t('sidebar.connectChannels')}
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
@@ -171,7 +172,7 @@ export function AppSidebar() {
                       return (
                         <SidebarMenuItem key={channel.id}>
                           <SidebarMenuButton
-                            tooltip={t('connectChannel', { name: channel.name || '' })}
+                            tooltip={t('sidebar.connectChannel', { name: channel.name || '' })}
                             disabled={connectMutation.isPending}
                             onClick={() => handleConnect(channel.id)}
                           >
@@ -198,7 +199,7 @@ export function AppSidebar() {
                           <SidebarMenuButton asChild>
                             <Link href="/settings" className="w-full flex items-center gap-2">
                               <PlusCircleIcon className="size-4" />
-                              <span className="truncate">{t('moreChannels')}</span>
+                              <span className="truncate">{t('sidebar.moreChannels')}</span>
                             </Link>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -212,7 +213,7 @@ export function AppSidebar() {
 
         <SidebarFooter>
           <div className="mb-3 text-xs text-muted-foreground">
-            {t('channelsConnected', { connected: connectedCount, total: totalChannels })} {/* ← mudou */}
+            {t('sidebar.channelsConnected', { connected: connectedCount, total: totalChannels })}
           </div>
           <div className="flex items-center gap-2">
             <UserButton

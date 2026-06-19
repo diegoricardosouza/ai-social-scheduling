@@ -9,6 +9,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { parse, set } from "date-fns";
 import { AlertTriangle, Lightbulb, ScanEye, Wand2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -39,12 +40,6 @@ type ChannelContent = {
 
 type ActionTabType = "ideas" | "ai" | "preview"
 
-const rightTabs = [
-  { id: "ideas" as ActionTabType, label: "Ideas", icon: Lightbulb },
-  { id: "ai" as ActionTabType, label: "AI Assistant", icon: Wand2 },
-  { id: "preview" as ActionTabType, label: "Preview", icon: ScanEye },
-]
-
 export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType) {
   const queryClient = useQueryClient();
   const [globalContent, setGlobalContent] = useState<ChannelContent>({ text: "", images: [] })
@@ -55,6 +50,13 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
   const [activeAccordion, setActiveAccordion] = useState<string>("")
   const [date, setDate] = useState<Date | undefined>(new Date())
   const [timeSlot, setTimeSlot] = useState<string>("")
+  const t = useTranslations()
+
+  const rightTabs = [
+    { id: "ideas" as ActionTabType, label: t('common.ideas'), icon: Lightbulb },
+    { id: "ai" as ActionTabType, label: t('common.aiAssistant'), icon: Wand2 },
+    { id: "preview" as ActionTabType, label: t('common.preview'), icon: ScanEye },
+  ]
 
   const { data, isPending } = useQuery({
     queryKey: ["channels"],
@@ -249,7 +251,7 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
 
   const handleCreatePost = (status?: PostStatus) => {
     if (selectedChannels.length === 0) {
-      toast.error("Select at least one channel")
+      toast.error(t('errors.selectLeastOneChannel'))
       return;
     }
     const postToCreate = selectedChannelsList.map((channel) => {
@@ -261,7 +263,7 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
       }
     })
     if (postToCreate.some((post) => !post.content)) {
-      toast.error("Each selected channel must have content")
+      toast.error(t('errors.eachSelectChannelNoContent'))
       return
     }
 
@@ -301,7 +303,7 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
         <div>
           <DialogHeader className="px-8 py-3 border-b">
             <div className="flex items-center justify-between">
-              <DialogTitle className="font-semibold">Create Post</DialogTitle>
+              <DialogTitle className="font-semibold">{t('common.createPost')}</DialogTitle>
               <div className="flex items-center gap-px">
                 {rightTabs.map((tab) => (
                   <Button
@@ -327,7 +329,7 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
                     className="mb-4 text-[13px] font-medium cursor-pointer"
                     onClick={handleSelectAll}
                   >
-                    {selectedChannels.length === connectedChannels.length ? "Unselect all" : "Select all"}
+                    {selectedChannels.length === connectedChannels.length ? t('common.unselectAll') : t('common.selectAll')}
                   </button>
                 )}
 
@@ -372,8 +374,8 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
                             </button>
                           </TooltipTrigger>
                           <TooltipContent>
-                            Preview {channel.name}
-                            {!isConnected && <span className="text-primary"> → Connect Channel</span>}
+                            {t('common.preview')} {channel.name}
+                            {!isConnected && <span className="text-primary"> → {t('common.connectChannel')}</span>}
                           </TooltipContent>
                         </Tooltip>
                       )
@@ -397,6 +399,7 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
                       onImagesChange={(images) =>
                         handleGlobalContentChange(globalContent.text, images)
                       }
+                      onClear={() => setGlobalContent({ text: "", images: [] })}
                     />
                   </div>
                 ) : (
@@ -438,7 +441,7 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
                                   {content.text}
                                 </p>
                               ) : (
-                                <p className="text-sm tex-muted">What would you like to share</p>
+                                <p className="text-sm tex-muted">{t('common.whatWouldYouLikeToShare')}</p>
                               )}
                             </AccordionTrigger>
                           )}
@@ -461,7 +464,7 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
                                 {!content?.text && (
                                   <div className="w-full flex items-center gap-2 rounded-md bg-[#ffefd0] px-3 py-1 text-xs text-amber-700 dark:bg-amber-950/40 dark:text-amber-400">
                                     <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-                                    <p>Please include at least some text or an attachment.</p>
+                                    <p>{t('common.pleaseIncludeTextOrAttachment')}</p>
                                   </div>
                                 )}
 
@@ -502,6 +505,10 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
                                       </span>
                                     </div>
                                   }
+                                  onClear={() => setChannelContent((prev) => ({
+                                    ...prev,
+                                    [channel.id]: { text: "", images: [] }
+                                  }))}
                                 />
                               </div>
                             </div>
@@ -572,7 +579,7 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
                 onClick={() => handleCreatePost(POST_STATUS.DRAFT)}
               >
                 {createPostMutation.isPending && createPostMutation.variables.status === POST_STATUS.DRAFT && <Spinner />}
-                Save Draft
+                {t('common.saveDraft')}
               </Button>
               <ButtonGroup className="p-0!">
                 <ScheduleDatePicker
@@ -586,14 +593,14 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
                     disabled={createPostMutation.isPending || !date || !timeSlot || isDatePassed || isTimeNotAvailable}
                     onClick={() => {
                       if (isDatePassed || isTimeNotAvailable) {
-                        toast.error("Please select a valid date and time")
+                        toast.error(t('common.pleaseSelectValidDateAndTime'))
                         return;
                       }
                       handleCreatePost()
                     }}
                   >
                     {createPostMutation.isPending && createPostMutation.variables.status === undefined && <Spinner />}
-                    Schedule Post
+                    {t('common.schedulePost')}
                   </Button>}
 
                 />
@@ -601,7 +608,7 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
             </div>
           ) : (
             <Button size="lg" asChild>
-              <Link href="/settings"> Connect Channel to Post</Link>
+              <Link href="/settings"> {t('common.connectChannelToPost')}</Link>
             </Button>
           )}
         </DialogFooter>

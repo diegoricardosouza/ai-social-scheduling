@@ -14,13 +14,12 @@ import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
+import { Spinner } from '../ui/spinner';
 
 function ChannelTabContent() {
   const searchParams = useSearchParams()
   const queryClient = useQueryClient()
-  const t = useTranslations('settings')
-  const t2 = useTranslations('common')
-  const tErrors = useTranslations('errors');
+  const t = useTranslations() // ← único useTranslations
 
   const { data: channelsData, isPending } = useQuery({
     queryKey: ["channels"],
@@ -40,10 +39,10 @@ function ChannelTabContent() {
     if (!connected && !error) return
     queryClient.invalidateQueries({ queryKey: ["channels"] })
     if (connected) {
-      toast.success(`Successfully connected to ${channelType}`)
+      toast.success(t('success.successConnectChannelType', { channelType: channelType || '' }))
     }
     if (error) {
-      toast.error(`Failed to connect to ${channelType}`)
+      toast.error(t('errors.failedConnectChannelType', { channelType: channelType || '' }))
     }
   }, [queryClient, searchParams])
 
@@ -62,7 +61,7 @@ function ChannelTabContent() {
       window.location.href = url
     },
     onError: (error: Error) => {
-      toast.error(tErrors(error.message as any))
+      toast.error(t(`errors.${error.message}` as any))
     },
   })
 
@@ -78,12 +77,12 @@ function ChannelTabContent() {
       return data
     },
     onSuccess: () => {
-      toast.success(t2('channelDisconnectedSuccessfully'))
+      toast.success(t('success.channelDisconnectedSuccessfully'))
       queryClient.invalidateQueries({ queryKey: ["channels"] })
     },
     onError: (error: Error) => {
       console.error("Disconnect error:", error)
-      toast.error(tErrors(error.message as any))
+      toast.error(t(`errors.${error.message}` as any))
     },
   })
 
@@ -101,9 +100,9 @@ function ChannelTabContent() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('channelTitle')}</CardTitle>
+        <CardTitle>{t('common.channels')}</CardTitle>
         <CardDescription>
-          {t('channelDesc')}
+          {t('settings.channelDesc')}
         </CardDescription>
       </CardHeader>
 
@@ -131,7 +130,7 @@ function ChannelTabContent() {
                       {icon ? (
                         <HugeiconsIcon icon={icon}
                           color='currentColor'
-                          className=" text-white! size-6! p-1 rounded-sm"
+                          className="text-white! size-6! p-1 rounded-sm"
                           style={{ background: channel.color }}
                         />
                       ) : null}
@@ -156,11 +155,11 @@ function ChannelTabContent() {
                     disabled={connectMutation.isPending || disconnectMutation.isPending}
                     onClick={() => channel.connected ? handleDisconnect(channel.user_channel_id!) : handleConnect(channel.id!)}
                   >
-                    {/* {(connectMutation.isPending && connectMutation.variables === channel.id ||
+                    {(connectMutation.isPending && connectMutation.variables === channel.id ||
                       disconnectMutation.isPending && disconnectMutation.variables === channel.user_channel_id) && (
                         <Spinner className='size-4' />
-                      )} */}
-                    {channel.connected ? t2('disconnect') : t2('connect')}
+                      )}
+                    {channel.connected ? t('common.disconnect') : t('common.connect')}
                   </Button>
                 </div>
               )
@@ -174,7 +173,7 @@ function ChannelTabContent() {
 
 const ChannelsTab = () => {
   return (
-    <Suspense fallback={<div className="text-sm text-muted-foreground">Loading channels...</div>}>
+    <Suspense fallback={<div className="text-sm text-muted-foreground">{ }</div>}>
       <ChannelTabContent />
     </Suspense>
   )

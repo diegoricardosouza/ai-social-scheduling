@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { ImageObject } from "@/types/post.type"
 import { EmojiPicker } from "@ferrucc-io/emoji-picker"
-import { ImagePlus, SmileIcon, Wand2Icon, X } from "lucide-react"
+import { Eraser, ImagePlus, SmileIcon, Wand2Icon, X } from "lucide-react"
 import * as React from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { Separator } from "./ui/separator"
@@ -28,6 +28,7 @@ interface ContentTextareaProps {
   renderToolbarRight?: React.ReactNode
   renderContent?: React.ReactNode
   disabled?: boolean
+  onClear?: () => void
 }
 
 export function ContentTextarea({
@@ -43,7 +44,8 @@ export function ContentTextarea({
   onImagesChange,
   renderToolbarRight,
   renderContent,
-  disabled = false
+  disabled = false,
+  onClear
 }: ContentTextareaProps) {
   const fileInputRef = React.useRef<HTMLInputElement>(null)
   const textareaRef = React.useRef<HTMLTextAreaElement>(null)
@@ -103,6 +105,19 @@ export function ContentTextarea({
 
   const handleRemoveImage = (index: number) => {
     onImagesChange?.(images.filter((_, i) => i !== index))
+  }
+
+  const handleClear = () => {
+    if (onClear) {
+      onClear()
+    } else {
+      // fallback se onClear não for passado
+      onChange("")
+      onImagesChange?.([])
+    }
+    if (textareaRef.current) {
+      textareaRef.current.value = ""
+    }
   }
 
   return (
@@ -220,17 +235,29 @@ export function ContentTextarea({
             </Popover>
             <Separator orientation="vertical" className="mx-0 my-1.5" />
             {showAIAssistant && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="ml-1 h-7 gap-1.5 text-sm"
-                onClick={onAIAssistantClick}
-                disabled={disabled}
-              >
-                <Wand2Icon className="h-3.5 w-3.5" />
-                AI Assistant
-              </Button>
+              <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 gap-1.5 text-sm"
+                  onClick={onAIAssistantClick}
+                  disabled={disabled}
+                >
+                  <Wand2Icon className="h-3.5 w-3.5" />
+                  AI Assistant
+                </Button>
+                <Separator orientation="vertical" className="mx-0 my-1.5" />
+              </>
             )}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 gap-1.5 text-sm"
+              onClick={handleClear}
+            >
+              <Eraser className="h-3.5 w-3.5" />
+              Clear
+            </Button>
           </div>
           {renderToolbarRight && (
             <div className="flex items-center gap-2">{renderToolbarRight}</div>

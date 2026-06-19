@@ -2,6 +2,7 @@ import { ChannelTypeEnum } from "@/constants/channels"
 import { ChannelType } from "@/types/channel.type"
 import { ImageObject } from "@/types/post.type"
 import { InfoIcon } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { BlueSkyPreview } from "./BlueSkyPreview"
 import { FacebookPreview } from "./FacebookPreview"
 import { InstagramPreview } from "./InstagramPreview"
@@ -22,10 +23,12 @@ export function PreviewPanel({
   channel: ChannelType | null
   content: ChannelContent
 }) {
+  const t = useTranslations()
+
   if (!channel) {
     return (
       <div className="flex flex-1 h-full items-center justify-center text-sm text-muted-foreground">
-        Select a channel to preview
+        {t('common.selectChannelToPreview')}
       </div>
     )
   }

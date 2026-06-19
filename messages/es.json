@@ -6,16 +6,40 @@
     "error": "Ocurrió un error",
     "connect": "Conectar",
     "disconnect": "Desconectar",
-    "failedStartConection": "No se pudo iniciar la conexión.",
-    "failedDisconnectChannel": "No se pudo desconectar el canal",
-    "channelDisconnectedSuccessfully": "Canal desconectado con éxito"
-  },
-  "sidebar": {
+    "settings": "Configuración",
     "ideas": "Ideas",
     "schedule": "Programación",
     "billing": "Planes",
-    "settings": "Configuración",
     "channels": "Canales",
+    "profile": "Perfil",
+    "appearance": "Apariencia",
+    "preview": "Vista previa",
+    "aiAssistant": "Asistente de IA",
+    "createPost": "Crear Publicación",
+    "saveDraft": "Guardar Borrador",
+    "schedulePost": "Programar Publicación",
+    "connectChannel": "Conectar Canal",
+    "selectAll": "Seleccionar todo",
+    "unselectAll": "Deseleccionar todo",
+    "whatWouldYouLikeToShare": "¿Qué te gustaría compartir?",
+    "pleaseIncludeTextOrAttachment": "Por favor, incluye al menos algo de texto o un archivo adjunto.",
+    "pleaseSelectValidDateAndTime": "Por favor, seleccione una fecha y hora válidas",
+    "connectChannelToPost": "Conectar canal para Publicación",
+    "selectChannelToPreview": "Seleccione un canal para previsualizar",
+    "allGroups": "Todos los grupos",
+    "noIdeas": "No hay ideas aún.",
+    "rephrase": "Expresar de otro modo",
+    "shorten": "Acortar",
+    "expand": "Expandir",
+    "aiRequiresUpgrade": "La generación de ideas mediante IA requiere una actualización.",
+    "upgrade": "Mejora",
+    "toProPremium": "a Pro o Premium para generar ideas con IA.",
+    "howCanICHelp": "¿Cómo puedo ayudar con esta publicación?",
+    "examplePromptTextarea": "Por ejemplo: Promociona mi curso de fotografía para conseguir nuevos alumnos. Las inscripciones cierran en 3 días.",
+    "quickActions": "Acciones rápidas",
+    "proTips": "Consejos profesionales: Añade contexto para obtener mejores resultados"
+  },
+  "sidebar": {
     "newPost": "Nueva Publicación",
     "connectChannels": "Conectar Canales",
     "connectChannel": "Conectar {name}",
@@ -26,25 +50,39 @@
   "ideas": {
     "title": "Mis Ideas",
     "empty": "Sin ideas aún",
-    "generate": "Generar ideas con IA"
+    "generate": "Generar"
   },
   "settings": {
-    "tab": {
-      "profile": "Perfil",
-      "channels": "Canales",
-      "appearance": "Apariencia"
-    },
-    "title": "Configuración",
     "profileTitle": "Tu Perfil",
     "profileDesc": "Gestiona la información de tu cuenta",
-    "channelTitle": "Canales",
-    "channelDesc": "Conecta tus cuentas de redes sociales para empezar a programar"
+    "channelDesc": "Conecta tus cuentas de redes sociales para empezar a programar",
+    "noName": "Sin nombre definido",
+    "noEmail": "Sin correo definido"
+  },
+  "appearance": {
+    "appearanceDesc": "Personaliza cómo App aparece para ti",
+    "darkMode": "Modo oscuro",
+    "darkModeDesc": "Alterna entre el tema claro y oscuro"
+  },
+  "billing": {
+    "billingDesc": "Gestiona tu suscripción e información de facturación."
   },
   "errors": {
     "USER_NOT_FOUND": "Usuario no encontrado",
     "CHANNEL_TYPE_REQUIRED": "Tipo de canal es requerido",
     "CHANNEL_TYPE_NOT_FOUND": "Tipo de canal no encontrado",
     "CONNECT_CHANNEL_FAILED": "Error al conectar canal",
-    "DISCONNECT_CHANNEL_FAILED": "Error al desconectar canal"
+    "DISCONNECT_CHANNEL_FAILED": "Error al desconectar canal",
+    "failedStartConection": "No se pudo iniciar la conexión",
+    "failedDisconnectChannel": "No se pudo desconectar el canal",
+    "failedConnectChannelType": "No se pudo conectar con {channelType}",
+    "selectLeastOneChannel": "Seleccione al menos un canal",
+    "eachSelectChannelNoContent": "Cada canal seleccionado debe tener contenido",
+    "failedGeneratePost": "No se pudo generar la publicación",
+    "failedGeneratePostTryAgain": "No se pudo generar la publicación. Inténtalo de nuevo."
+  },
+  "success": {
+    "successConnectChannelType": "Conectado con éxito a {channelType}",
+    "channelDisconnectedSuccessfully": "Canal desconectado con éxito"
   }
 }

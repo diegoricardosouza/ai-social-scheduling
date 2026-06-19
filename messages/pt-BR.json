@@ -6,16 +6,40 @@
     "error": "Ocorreu um erro",
     "connect": "Conectar",
     "disconnect": "Desconectar",
-    "failedStartConection": "Falha ao iniciar a conexão",
-    "failedDisconnectChannel": "Falha ao desconectar canal",
-    "channelDisconnectedSuccessfully": "Canal desconectado com sucesso"
-  },
-  "sidebar": {
+    "settings": "Configurações",
     "ideas": "Ideias",
     "schedule": "Agendamentos",
     "billing": "Planos",
-    "settings": "Configurações",
     "channels": "Canais",
+    "profile": "Perfil",
+    "appearance": "Aparência",
+    "preview": "Visualizar",
+    "aiAssistant": "Assistente de IA",
+    "createPost": "Criar Post",
+    "saveDraft": "Salvar Rascunho",
+    "schedulePost": "Agendar Post",
+    "connectChannel": "Conectar Canal",
+    "selectAll": "Selecionar tudo",
+    "unselectAll": "Desmarcar tudo",
+    "whatWouldYouLikeToShare": "O que você gostaria de compartilhar?",
+    "pleaseIncludeTextOrAttachment": "Por favor, inclua pelo menos algum texto ou um anexo.",
+    "pleaseSelectValidDateAndTime": "Por favor, selecione uma data e hora válidas",
+    "connectChannelToPost": "Conectar canal ao Post",
+    "selectChannelToPreview": "Selecione um canal para pré-visualizar",
+    "allGroups": "Todos os grupos",
+    "noIdeas": "Nenhuma ideia ainda",
+    "rephrase": "Reformular",
+    "shorten": "Encurtar",
+    "expand": "Expandir",
+    "aiRequiresUpgrade": "A geração de ideias por IA requer uma atualização.",
+    "upgrade": "Atualizar",
+    "toProPremium": "para a versão Pro ou Premium para gerar ideias com IA.",
+    "howCanICHelp": "Como posso ajudar com este post?",
+    "examplePromptTextarea": "Ex.: Divulgue meu curso de fotografia para conseguir novos inscritos. As inscrições encerram em 3 dias.",
+    "quickActions": "Ações rápidas",
+    "proTips": "Dica: Adicione contexto para obter melhores resultados"
+  },
+  "sidebar": {
     "newPost": "Novo Post",
     "connectChannels": "Conectar Canais",
     "connectChannel": "Conectar {name}",
@@ -26,25 +50,39 @@
   "ideas": {
     "title": "Minhas Ideias",
     "empty": "Nenhuma ideia ainda",
-    "generate": "Gerar ideias com IA"
+    "generate": "Gerar"
   },
   "settings": {
-    "tab": {
-      "profile": "Perfil",
-      "channels": "Canais",
-      "appearance": "Aparência"
-    },
-    "title": "Configurações",
     "profileTitle": "Seu Perfil",
     "profileDesc": "Gerencie as informações da sua conta",
-    "channelTitle": "Canais",
-    "channelDesc": "Conecte suas contas de redes sociais para começar a agendar"
+    "channelDesc": "Conecte suas contas de redes sociais para começar a agendar",
+    "noName": "Sem nome definido",
+    "noEmail": "Sem e-mail definido"
+  },
+  "appearance": {
+    "appearanceDesc": "Personalize a aparência do Aplicativo para você.",
+    "darkMode": "Modo escuro",
+    "darkModeDesc": "Alterne entre o tema claro e escuro"
+  },
+  "billing": {
+    "billingDesc": "Gerencie suas informações de assinatura e faturamento."
   },
   "errors": {
     "USER_NOT_FOUND": "Usuário não encontrado",
     "CHANNEL_TYPE_REQUIRED": "Tipo de canal é obrigatório",
     "CHANNEL_TYPE_NOT_FOUND": "Tipo de canal não encontrado",
     "CONNECT_CHANNEL_FAILED": "Falha ao conectar canal",
-    "DISCONNECT_CHANNEL_FAILED": "Falha ao desconectar canal"
+    "DISCONNECT_CHANNEL_FAILED": "Falha ao desconectar canal",
+    "failedStartConection": "Falha ao iniciar a conexão",
+    "failedDisconnectChannel": "Falha ao desconectar canal",
+    "failedConnectChannelType": "Falha ao conectar-se a {channelType}",
+    "selectLeastOneChannel": "Selecione pelo menos um canal",
+    "eachSelectChannelNoContent": "Cada canal selecionado deve ter conteúdo",
+    "failedGeneratePost": "Falha ao gerar a post",
+    "failedGeneratePostTryAgain": "Não foi possível gerar o post. Tente novamente."
+  },
+  "success": {
+    "successConnectChannelType": "Conectado com sucesso a ${channelType}",
+    "channelDisconnectedSuccessfully": "Canal desconectado com sucesso"
   }
 }

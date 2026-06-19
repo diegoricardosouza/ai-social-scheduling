@@ -6,16 +6,40 @@
     "error": "An error occurred",
     "connect": "Connect",
     "disconnect": "Disconnect",
-    "failedStartConection": "Failed to start connection",
-    "failedDisconnectChannel": "Failed to disconnect channel",
-    "channelDisconnectedSuccessfully": "Channel disconnected successfully"
-  },
-  "sidebar": {
+    "settings": "Settings",
     "ideas": "Ideas",
     "schedule": "Schedule",
     "billing": "Billing",
-    "settings": "Settings",
     "channels": "Channels",
+    "profile": "Profile",
+    "appearance": "Appearance",
+    "preview": "Preview",
+    "aiAssistant": "AI Assistant",
+    "createPost": "Create Post",
+    "saveDraft": "Save Draft",
+    "schedulePost": "Schedule Post",
+    "connectChannel": "Connect Channel",
+    "selectAll": "Select all",
+    "unselectAll": "Unselect all",
+    "whatWouldYouLikeToShare": "What would you like to share",
+    "pleaseIncludeTextOrAttachment": "Please include at least some text or an attachment.",
+    "pleaseSelectValidDateAndTime": "Please select a valid date and time",
+    "connectChannelToPost": "Connect Channel to Post",
+    "selectChannelToPreview": "Select a channel to preview",
+    "allGroups": "All groups",
+    "noIdeas": "No ideas yet.",
+    "rephrase": "Rephrase",
+    "shorten": "Shorten",
+    "expand": "Expand",
+    "aiRequiresUpgrade": "AI idea generation requires an upgrade",
+    "upgrade": "Upgrade",
+    "toProPremium": "to Pro or Premium to generate ideas with AI.",
+    "howCanICHelp": "How can I help with this post?",
+    "examplePromptTextarea": "Eg. Promote my photography course to get new signups. Registration closes in 3 days.",
+    "quickActions": "Quick actions",
+    "proTips": "Pro tips: Add context for better results"
+  },
+  "sidebar": {
     "newPost": "New Post",
     "connectChannels": "Connect Channels",
     "connectChannel": "Connect {name}",
@@ -26,25 +50,39 @@
   "ideas": {
     "title": "My Ideas",
     "empty": "No ideas yet",
-    "generate": "Generate ideas with AI"
+    "generate": "Generate"
   },
   "settings": {
-    "tab": {
-      "profile": "Profile",
-      "channels": "Channels",
-      "appearance": "Appearance"
-    },
-    "title": "Settings",
     "profileTitle": "Your Profile",
     "profileDesc": "Manage your account information",
-    "channelTitle": "Channels",
-    "channelDesc": "Connect your social media accounts to start scheduling"
+    "channelDesc": "Connect your social media accounts to start scheduling",
+    "noName": "No name set",
+    "noEmail": "No email set"
+  },
+  "appearance": {
+    "appearanceDesc": "Customize how App for you",
+    "darkMode": "Dark mode",
+    "darkModeDesc": "Toggle between light and dark theme"
+  },
+  "billing": {
+    "billingDesc": "Manage your subscription and billing information."
   },
   "errors": {
     "USER_NOT_FOUND": "User not found",
     "CHANNEL_TYPE_REQUIRED": "Channel type is required",
     "CHANNEL_TYPE_NOT_FOUND": "Channel type not found",
     "CONNECT_CHANNEL_FAILED": "Failed to connect channel",
-    "DISCONNECT_CHANNEL_FAILED": "Failed to disconnect channel"
+    "DISCONNECT_CHANNEL_FAILED": "Failed to disconnect channel",
+    "failedStartConection": "Failed to start connection",
+    "failedDisconnectChannel": "Failed to disconnect channel",
+    "failedConnectChannelType": "Failed to connect to {channelType}",
+    "selectLeastOneChannel": "Select at least one channel",
+    "eachSelectChannelNoContent": "Each selected channel must have content",
+    "failedGeneratePost": "Failed to generate post",
+    "failedGeneratePostTryAgain": "Failed to generate post. Please try again."
+  },
+  "success": {
+    "successConnectChannelType": "Successfully connected to {channelType}",
+    "channelDisconnectedSuccessfully": "Channel disconnected successfully"
   }
 }

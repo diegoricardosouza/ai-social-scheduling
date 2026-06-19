@@ -15,13 +15,13 @@ import Image from "next/image";
 export default function SettingsPage() {
   const { user } = useUser();
   const { theme, setTheme } = useTheme();
-  const t = useTranslations('settings')
+  const t = useTranslations();
 
   return (
     <div className="w-full">
       <div className="max-w-5xl mx-auto w-full h-full">
         <div className="py-4">
-          <h1 className="text-xl font-semibold">{t('title')}</h1>
+          <h1 className="text-xl font-semibold">{t('common.settings')}</h1>
         </div>
 
         <div>
@@ -30,15 +30,15 @@ export default function SettingsPage() {
               <TabsList variant="line" className="w-fit space-x-4">
                 <TabsTrigger value="profile" className="cursor-pointer">
                   <User className="size-4" />
-                  {t('tab.profile')}
+                  {t('common.profile')}
                 </TabsTrigger>
                 <TabsTrigger value="channels" className="cursor-pointer">
                   <Layers className="size-4" />
-                  {t('tab.channels')}
+                  {t('common.channels')}
                 </TabsTrigger>
                 <TabsTrigger value="appearance" className="cursor-pointer">
                   <Palette className="size-4" />
-                  {t('tab.appearance')}
+                  {t('common.appearance')}
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -46,14 +46,14 @@ export default function SettingsPage() {
             <TabsContent value="profile">
               <Card>
                 <CardHeader>
-                  <CardTitle>{t('profileTitle')}</CardTitle>
-                  <CardDescription>{t('profileDesc')}</CardDescription>
+                  <CardTitle>{t('settings.profileTitle')}</CardTitle>
+                  <CardDescription>{t('settings.profileDesc')}</CardDescription>
                 </CardHeader>
 
                 <CardContent>
                   <div className="flex items-center gap-4">
                     {user?.imageUrl ? (
-                      <Image 
+                      <Image
                         src={user.imageUrl}
                         alt="Profile"
                         className="h-16 w-16 rounded-full"
@@ -67,13 +67,13 @@ export default function SettingsPage() {
                     )}
 
                     <div>
-                      <p className="font-medium">{user?.fullName || "No Name set"}</p>
-                      <p className="text-sm text-muted-foreground">{user?.primaryEmailAddress?.emailAddress || "No Name set"}</p>
+                      <p className="font-medium">{user?.fullName || t('common.error')}</p>
+                      <p className="text-sm text-muted-foreground">{user?.primaryEmailAddress?.emailAddress || t('common.error')}</p>
                     </div>
                   </div>
 
                   <div className="mt-6">
-                    <UserProfile 
+                    <UserProfile
                       appearance={{
                         elements: {
                           rootBox: "w-full",
@@ -93,15 +93,15 @@ export default function SettingsPage() {
             <TabsContent value="appearance">
               <Card>
                 <CardHeader>
-                  <CardTitle>Appearance</CardTitle>
-                  <CardDescription>Customize how Lemon AI looks for you</CardDescription>
+                  <CardTitle>{t('common.appearance')}</CardTitle>
+                  <CardDescription>{t('appearance.appearanceDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label htmlFor="theme">Dark mode</Label>
+                      <Label htmlFor="theme">{t('appearance.darkMode')}</Label>
                       <p className="text-sm text-muted-foreground">
-                        Toggle between light and dark theme
+                        {t('appearance.darkModeDesc')}
                       </p>
                     </div>
                     <Switch

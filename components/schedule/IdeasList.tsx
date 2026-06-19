@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton"
 import { ImageObject } from "@/types/post.type"
 import { useQuery } from "@tanstack/react-query"
+import { useTranslations } from "next-intl"
 import { useMemo, useState } from "react"
 
 interface Idea {
@@ -28,6 +29,7 @@ interface IdeaGroup {
 }
 
 export function IdeasList({ onSelect }: IdeasListProps) {
+  const t = useTranslations()
   const [selectedGroupId, setSelectedGroupId] = useState<string>("all")
 
   const { data, isLoading } = useQuery({
@@ -63,15 +65,15 @@ export function IdeasList({ onSelect }: IdeasListProps) {
   return (
     <div className="space-y-3 flex flex-col">
       <div className="px-6 flex itms-center justify-between gap-3">
-        <h5 className="font-medium text-base">Ideas</h5>
+        <h5 className="font-medium text-base">{t('common.ideas')}</h5>
         <Select value={selectedGroupId} onValueChange={setSelectedGroupId}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="All groups" />
+          <SelectTrigger className="w-[150px] cursor-pointer">
+            <SelectValue placeholder={t('common.allGroups')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All groups</SelectItem>
+            <SelectItem value="all" className="cursor-pointer">{t('common.allGroups')}</SelectItem>
             {groups.map((group) => (
-              <SelectItem key={group.id} value={group.id}>
+              <SelectItem key={group.id} value={group.id} className="cursor-pointer">
                 {group.title}
               </SelectItem>
             ))}
@@ -131,7 +133,7 @@ export function IdeasList({ onSelect }: IdeasListProps) {
 
         {!isLoading && filteredIdeas.length === 0 && (
           <div className="rounded-lg border border-dashed px-4 py-8 text-center text-sm text-muted-foreground">
-            No ideas yet.
+            {t('common.noIdeas')}
           </div>
         )}
       </div>

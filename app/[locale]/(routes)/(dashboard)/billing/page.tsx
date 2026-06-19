@@ -1,12 +1,15 @@
-import { ClerkLoaded, ClerkLoading, PricingTable } from "@clerk/nextjs"
+import { ClerkLoaded, ClerkLoading, PricingTable } from "@clerk/nextjs";
+import { useTranslations } from "next-intl";
 
 export default function BillingPage() {
+  const t = useTranslations();
+
   return (
     <div className="w-full max-w-6xl px-6 py-6 mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight">Billing</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('common.billing')}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Manage your subscription and billing information.
+          {t('billing.billingDesc')}
         </p>
       </div>
 

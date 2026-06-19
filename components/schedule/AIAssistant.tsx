@@ -6,16 +6,11 @@ import { cn } from "@/lib/utils"
 import { useSubscription } from "@clerk/nextjs/experimental"
 import { useMutation } from "@tanstack/react-query"
 import { Minus, Plus, Repeat, Wand2Icon } from "lucide-react"
+import { useTranslations } from "next-intl"
 import Link from "next/link"
 import * as React from "react"
 import { toast } from "sonner"
 import { Spinner } from "../ui/spinner"
-
-const QUICK_ACTIONS = [
-  { icon: Repeat, label: "Rephrase" },
-  { icon: Minus, label: "Shorten" },
-  { icon: Plus, label: "Expand" },
-]
 
 interface AIAssistantProps {
   onGenerate?: (content: string) => void
@@ -25,6 +20,7 @@ interface AIAssistantProps {
 }
 
 export function AIAssistant({ className, content, channelId, onGenerate }: AIAssistantProps) {
+  const t = useTranslations()
   const [prompt, setPrompt] = React.useState("")
   const { data: subscription, isLoading } = useSubscription()
   const canUseAI =
@@ -32,6 +28,12 @@ export function AIAssistant({ className, content, channelId, onGenerate }: AIAss
       const planSlug = item.plan.slug
       return planSlug === "pro" || planSlug === "premium"
     })
+
+  const QUICK_ACTIONS = [
+    { icon: Repeat, label: t('common.rephrase') },
+    { icon: Minus, label: t('common.shorten') },
+    { icon: Plus, label: t('common.expand') },
+  ]
 
   const generateMutation = useMutation({
     mutationFn: async ({ action, promptText }: { action: string; promptText?: string }) => {
@@ -46,7 +48,7 @@ export function AIAssistant({ className, content, channelId, onGenerate }: AIAss
         }),
       })
       if (!res.ok) {
-        throw new Error("Failed to generate post")
+        throw new Error(t('errors.failedGeneratePost'))
       }
       return res.json()
     },
@@ -57,7 +59,7 @@ export function AIAssistant({ className, content, channelId, onGenerate }: AIAss
     },
     onError: (error: unknown) => {
       console.error("Generation error:", error)
-      const message = error instanceof Error ? error.message : "Failed to generate post. Please try again."
+      const message = error instanceof Error ? error.message : t('errors.failedGeneratePostTryAgain')
       toast.error(message)
     },
   })
@@ -86,12 +88,12 @@ export function AIAssistant({ className, content, channelId, onGenerate }: AIAss
     >
       {!canUseAI && !isLoading && (
         <div className="mb-4 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200">
-          <p className="text-sm font-medium">AI idea generation requires an upgrade</p>
+          <p className="text-sm font-medium">{t('common.aiRequiresUpgrade')}</p>
           <p className="mt-1 text-sm text-amber-800/80 dark:text-amber-200/80">
             <Link href="/billing" className="underline underline-offset-4">
-              Upgrade
+              {t('common.upgrade')}
             </Link>{" "}
-            to Pro or Premium to generate ideas with AI.
+            {t('common.toProPremium')}
           </p>
         </div>
       )}
@@ -100,13 +102,13 @@ export function AIAssistant({ className, content, channelId, onGenerate }: AIAss
         <div className="flex items-center gap-2 ">
           <Wand2Icon className="h-4 w-4 text-purple-500" />
           <span className="text-sm font-semibold bg-linear-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">
-            AI Assistant
+            {t('common.aiAssistant')}
           </span>
         </div>
       </div>
 
       <p className="mb-3 text-sm font-medium">
-        How can I help with this post?
+        {t('common.howCanICHelp')}
       </p>
 
       {/* Textarea for custom prompt */}
@@ -114,7 +116,7 @@ export function AIAssistant({ className, content, channelId, onGenerate }: AIAss
         <Textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Eg. Promote my photography course to get new signups. Registration closes in 3 days."
+          placeholder={t('common.examplePromptTextarea')}
           className="w-full min-h-[130px] resize-none"
           disabled={!canUseAI}
         />
@@ -130,13 +132,13 @@ export function AIAssistant({ className, content, channelId, onGenerate }: AIAss
           ) : (
             <Wand2Icon className="h-4 w-4" />
           )}
-          Generate
+          {t('ideas.generate')}
         </Button>
       </div>
 
       {content && content.trim() && (
         <div className="mt-4">
-          <p className="mb-2 text-xs text-muted-foreground">Quick actions:</p>
+          <p className="mb-2 text-xs text-muted-foreground">{t('common.quickActions')}:</p>
           <div className="flex flex-col gap-2">
             {QUICK_ACTIONS.map(({ icon: Icon, label }) => (
               <Button
@@ -161,7 +163,7 @@ export function AIAssistant({ className, content, channelId, onGenerate }: AIAss
       {/* Footer */}
       <p className="mt-auto pt-4 text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1">
-          Pro tips: Add context for better results
+          {t('common.proTips')}
         </span>
       </p>
     </div>
