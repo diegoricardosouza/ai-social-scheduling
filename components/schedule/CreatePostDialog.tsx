@@ -390,7 +390,7 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
                     <ContentTextarea
                       value={globalContent?.text || ""}
                       images={globalContent?.images || []}
-                      placeholder="Write your main content here... It will be copied to channels when you select them"
+                      placeholder={t('common.writeMainContent')}
                       minHeight={253}
                       showAIAssistant={true}
                       disabled={!hasConnectedChannel}
@@ -471,7 +471,7 @@ export function CreatePostDialog({ open, onOpenChange, selectedDate }: PropsType
                                 <ContentTextarea
                                   value={content?.text || ""}
                                   images={content?.images || []}
-                                  placeholder="Start writing or get inspired by AI"
+                                  placeholder={t('common.startWritingAI')}
                                   minHeight={260}
                                   contentClass="text-sm placeholder:opacity-50 pt-0"
                                   showAIAssistant={true}

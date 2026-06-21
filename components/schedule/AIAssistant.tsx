@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import { useSubscription } from "@clerk/nextjs/experimental"
 import { useMutation } from "@tanstack/react-query"
 import { Minus, Plus, Repeat, Wand2Icon } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import Link from "next/link"
 import * as React from "react"
 import { toast } from "sonner"
@@ -19,22 +19,23 @@ interface AIAssistantProps {
   channelId?: string
 }
 
+const QUICK_ACTIONS = [
+  { icon: Repeat, label: "Rephrase" },
+  { icon: Minus, label: "Shorten" },
+  { icon: Plus, label: "Expand" },
+]
+
 export function AIAssistant({ className, content, channelId, onGenerate }: AIAssistantProps) {
   const t = useTranslations()
+  const locale = useLocale();
   const [prompt, setPrompt] = React.useState("")
   const { data: subscription, isLoading } = useSubscription()
   const canUseAI =
     !!subscription?.subscriptionItems?.some((item) => {
       const planSlug = item.plan.slug
       return planSlug === "pro" || planSlug === "premium"
-    })
-
-  const QUICK_ACTIONS = [
-    { icon: Repeat, label: t('common.rephrase') },
-    { icon: Minus, label: t('common.shorten') },
-    { icon: Plus, label: t('common.expand') },
-  ]
-
+    })    
+  
   const generateMutation = useMutation({
     mutationFn: async ({ action, promptText }: { action: string; promptText?: string }) => {
       const res = await fetch("/api/post/generate-post", {
@@ -45,6 +46,7 @@ export function AIAssistant({ className, content, channelId, onGenerate }: AIAss
           prompt: promptText,
           content,
           channelId,
+          locale
         }),
       })
       if (!res.ok) {
@@ -153,7 +155,7 @@ export function AIAssistant({ className, content, channelId, onGenerate }: AIAss
                 ) : (
                   <Icon className="h-4 w-4 text-purple-500" />
                 )}
-                {label}
+                {t(`common.${label.toLowerCase()}`)}
               </Button>
             ))}
           </div>

@@ -5,6 +5,7 @@ import { ListView } from "@/components/schedule/Listview";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { CalendarIcon, LayoutList, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useQueryState } from "nuqs";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Suspense, useState } from "react";
@@ -12,6 +13,7 @@ import { Suspense, useState } from "react";
 type ViewType = "calendar" | "list"
 
 function SchedulePageContent() {
+  const t = useTranslations()
   const [activeView, setActiveView] = useQueryState("view", {
     defaultValue: "calendar",
   });
@@ -24,7 +26,7 @@ function SchedulePageContent() {
     <div className="flex flex-col h-full">
       <header className="flex items-center justify-between px-6 pt-4 pb-2">
         <div>
-          <h1 className="text-xl font-semibold">All Channels</h1>
+          <h1 className="text-xl font-semibold">{t('common.allChannels')}</h1>
         </div>
 
         <div className="flex items-center gap-4">
@@ -41,20 +43,20 @@ function SchedulePageContent() {
           >
             <ToggleGroupItem 
               value="list"
-              className="gap-2 my-px"
+              className="gap-2 my-px cursor-pointer"
             >
               <LayoutList className="size-4" />
-              <span className="text-sm">List</span>
+              <span className="text-sm">{t('common.list')}</span>
             </ToggleGroupItem>
             
-            <ToggleGroupItem value="calendar">
+            <ToggleGroupItem value="calendar" className="cursor-pointer">
               <CalendarIcon className="size-4" />
-              <span className="text-sm">Calendar</span>
+              <span className="text-sm">{t('common.calendar')}</span>
             </ToggleGroupItem>
           </ToggleGroup>
           <Button onClick={() => setCreatePostModalOpen(true)}>
             <Plus className="size-4" />
-            Add Post
+            {t('common.addPost')}
           </Button>
         </div>
       </header>

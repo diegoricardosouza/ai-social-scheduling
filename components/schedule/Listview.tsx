@@ -1,9 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
+import { capitalize } from "@/lib/capitalize";
+import { getDateFnsLocale } from "@/lib/date-fns-locale";
 import { cn } from "@/lib/utils";
 import { PostType } from "@/types/post.type";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
-import { format, formatDistanceToNow, isPast, parseISO } from "date-fns";
+import { format, formatDistanceToNow, isPast, parse, parseISO } from "date-fns";
 import { AlarmClockCheck, ExternalLink, LayoutList, Pin, Plus, Send } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -29,6 +32,9 @@ export function ListView({ setCreatePostModalOpen }: {
   setCreatePostModalOpen: (open: boolean) => void
 }) {
   const queryClient = useQueryClient()
+  const t = useTranslations()
+  const locale = useLocale()
+  const dateFnsLocale = getDateFnsLocale(locale)
   const [activeTab, setActiveTab] = useQueryState("status", {
     defaultValue: "draft"
   })
@@ -64,6 +70,19 @@ export function ListView({ setCreatePostModalOpen }: {
   //     return res.json();
   //   }
   // })
+
+  const STATUS_LABEL: Record<string, string> = {
+    draft: t('common.draft'),
+    queue: t('common.queue'),
+    published: t('common.published'),
+    failed: t('common.failed'),
+  }
+
+  const POST_STATUS_LABEL: Record<string, string> = {
+    overdue: t('common.overdue'),
+    draft: t('common.draft'),
+    custom: t('common.custom'),
+  }
 
   const [postsQuery, totalsQuery] = useQueries({
     queries: [
@@ -106,7 +125,8 @@ export function ListView({ setCreatePostModalOpen }: {
       return res.json();
     },
     onSuccess: () => {
-      toast.success("Post processing...")
+      const message = t('common.postProcessing')+"..."
+      toast.success(message)
       queryClient.invalidateQueries({
         predicate: (query) => query.queryKey[0] === "posts",
       });
@@ -157,17 +177,17 @@ export function ListView({ setCreatePostModalOpen }: {
         <div className="flex items-center justify-between border-b px-6">
           <Tabs value={activeTab || "draft"} onValueChange={(val) => setActiveTab(val)}>
             <TabsList variant="line" className="space-x-4">
-              <TabsTrigger value="draft">
-                Draft {renderTotalBadge(totalDrafts)}
+              <TabsTrigger value="draft" className="cursor-pointer">
+                {t('common.draft')} {renderTotalBadge(totalDrafts)}
               </TabsTrigger>
-              <TabsTrigger value="queue">
-                Queue {renderTotalBadge(totalQueue)}
+              <TabsTrigger value="queue" className="cursor-pointer">
+                {t('common.queue')} {renderTotalBadge(totalQueue)}
               </TabsTrigger>
-              <TabsTrigger value="published">
-                Published {renderTotalBadge(totalPublished)}
+              <TabsTrigger value="published" className="cursor-pointer">
+                {t('common.published')} {renderTotalBadge(totalPublished)}
               </TabsTrigger>
-              <TabsTrigger value="failed">
-                Failed {renderTotalBadge(totalFailed)}
+              <TabsTrigger value="failed" className="cursor-pointer">
+                {t('common.failed')} {renderTotalBadge(totalFailed)}
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -199,16 +219,16 @@ export function ListView({ setCreatePostModalOpen }: {
                     <LayoutList className="size-8 text-muted-foreground" />
                   </div>
                   <h3 className="text-lg font-semibold capitalize">
-                    No {activeTab === "queue" ? "scheduled" : activeTab} posts yet
+                    {t('common.noPostsYet', { status: STATUS_LABEL[activeTab] ?? activeTab })}
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    Connect a channel and create your first post to get started with scheduling.
+                    {t('common.connectChannelToCreatePost')}
                   </p>
                   <Button size="lg"
                     onClick={() => setCreatePostModalOpen(true)}
                   >
                     <Plus className="size-4" />
-                    Create Post
+                    {t('common.createPost')}
                   </Button>
                 </div>
               </div>
@@ -216,7 +236,10 @@ export function ListView({ setCreatePostModalOpen }: {
               <div className="w-full space-y-5">
                 {groupPosts.map((group) => (
                   <div key={group.key}>
-                    <h2 className="text-lg font-medium">{group.label}</h2>
+                    {/* <h2 className="text-lg font-medium">{group.label}</h2> */}
+                    <h2 className="text-lg font-medium capitalize">
+                      {capitalize(format(parse(group.key, 'yyyy-MM-dd', new Date()), "EEEE, dd MMMM yyyy", { locale: dateFnsLocale }))}
+                    </h2>
                     <div className="space-y-6">
                       {group.posts.map((post) => {
                         const scheduleDate = parseISO(post.scheduled_at);
@@ -224,10 +247,10 @@ export function ListView({ setCreatePostModalOpen }: {
                         const previewImage = post.images?.[0]?.url;
                         
                         return (
-                          <div key={post.id} className="grid gap-2 lg:grid-cols-[120px_minmax(0,1fr)]">
+                          <div key={post.id} className="grid gap-2 lg:grid-cols-[150px_minmax(0,1fr)]">
                             <div>
                               <h5>
-                                {format(scheduleDate, "h:mm a")}
+                                {format(scheduleDate, "h:mm a", { locale: dateFnsLocale })}
                               </h5>
                               {/* <div className="flex items-center gap-2 text-muted-foreground">
                                 <Pin className="size-4" />
@@ -242,10 +265,10 @@ export function ListView({ setCreatePostModalOpen }: {
                                 <Pin className="size-4" />
                                 <span className="capitalize">
                                   {isPast(scheduleDate) && (post.status === "queue" || post.status === "draft")
-                                    ? "Overdue"
+                                    ? POST_STATUS_LABEL.overdue
                                     : post.status === "draft"
-                                      ? "Draft"
-                                      : "Custom"}
+                                      ? POST_STATUS_LABEL.draft
+                                      : POST_STATUS_LABEL.custom}
                                 </span>
                               </div>
                             </div>
@@ -275,7 +298,7 @@ export function ListView({ setCreatePostModalOpen }: {
                                     />
                                   ) : (
                                     <div className="flex h-full-center justify-center text-sm text-muted-foreground">
-                                      No media
+                                      {t('common.noMedia')}
                                     </div>
                                   )}
                                 </div>
@@ -285,13 +308,13 @@ export function ListView({ setCreatePostModalOpen }: {
                                 <p className="text-sm text-muted-foreground">
                                   {post.status === "published" ? (
                                     <>
-                                      Published via <span className="font-medium text-foreground">{channel?.name || "Channel"}</span>
+                                      {t('common.publishedVia')} <span className="font-medium text-foreground">{channel?.name || t('common.channel')}</span>
                                     </>
                                   ) : (
                                     <>
-                                      You created this <span className="font-medium text-foreground">
-                                        {formatDistanceToNow(parseISO(post.created_at))}
-                                      </span> ago
+                                      {t('common.youCreatedThis')} <span className="font-medium text-foreground">
+                                        {formatDistanceToNow(parseISO(post.created_at), { locale: dateFnsLocale })}
+                                      </span> {t('common.ago')}
                                     </>
                                   )}
                                 </p>
@@ -305,7 +328,7 @@ export function ListView({ setCreatePostModalOpen }: {
                                         rel="noopener noreferrer"
                                       >
                                         <ExternalLink className="h-4 w-4" />
-                                        View Post
+                                        {t('common.viewPost')}
                                       </a>
                                     </Button>
                                   ) : (
@@ -314,7 +337,7 @@ export function ListView({ setCreatePostModalOpen }: {
                                         onClick={() => handleEditPost(post)}
                                       >
                                         <AlarmClockCheck className="size-4" />
-                                        Reschedule
+                                        {t('common.reschedule')}
                                       </Button>
 
                                       {post.status === "draft" && (
@@ -327,7 +350,7 @@ export function ListView({ setCreatePostModalOpen }: {
                                           ) : (
                                             <Send className="size-4" />
                                           )}
-                                          Publish Now
+                                          {t('common.publishNow')}
                                         </Button>
                                       )}
                                     </>

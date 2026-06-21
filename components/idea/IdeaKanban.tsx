@@ -12,6 +12,7 @@ import {
 } from "@hello-pangea/dnd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MoreHorizontal, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "../ui/badge";
@@ -30,6 +31,7 @@ type Column = {
 
 export function IdeaKanban() {
   const queryClient = useQueryClient()
+  const t = useTranslations()
   const [columns, setColumns] = useState<Column[]>([])
   const [showIdeaDialog, setShowIdeaDialog] = useState<boolean>(false)
   const [selectedIdea, setSelectedIdea] = useState<IdeaType | null>(null)
@@ -65,7 +67,7 @@ export function IdeaKanban() {
           sortOrder: idea.sortOrder
         })
       })
-      if (!response.ok) throw new Error("Failed to save idea");
+      if (!response.ok) throw new Error(t('errors.failedToSaveIdea'));
       return response.json()
     },
     onSuccess: () => {
@@ -73,7 +75,7 @@ export function IdeaKanban() {
     },
     onError: (error) => {
       console.error("Failed to save idea:", error)
-      toast.error("Faild to save idea")
+      toast.error(t('errors.failedToSaveIdea'))
     }
   })
 
@@ -82,7 +84,7 @@ export function IdeaKanban() {
       const res = await fetch(`/api/idea/${id}`, {
         method: "DELETE",
       })
-      if (!res.ok) throw new Error("Failed to delete idea")
+      if (!res.ok) throw new Error(t('errors.failedToDeleteIdea'))
       return res.json()
     },
     onSuccess: () => {
@@ -90,7 +92,7 @@ export function IdeaKanban() {
     },
     onError: (error) => {
       console.error("Failed to delete idea", error);
-      toast.error("Failed to delete idea")
+      toast.error(('errors.failedToDeleteIdea'))
     }
   })
 
@@ -244,19 +246,20 @@ export function IdeaKanban() {
       <div className="flex flex-col overflow-hidden">
         <header className="flex items-center justify-between border-b px-6 py-4">
           <div>
-            <h1 className="text-xl font-semibold">Ideas</h1>
+            <h1 className="text-xl font-semibold">{t('common.ideas')}</h1>
             <p className="text-sm text-muted-foreground">
-              Capture and organize your content ideas
+              {t('common.captureAndOrganizeIdeas')}
             </p>
           </div>
           <div className="flex items-center gap-3">
             {/* //GenerateIdea popover */}
             <GenerateIdeasPopover onGenerated={handleGeneratedIdea} />
+
             <Button variant="outline" className="gap-2"
               onClick={() => handleAddIdea(columns[0]?.id ?? "")}
             >
               <Plus className="h-4 w-4" />
-              New Idea
+              {t('common.newIdea')}
             </Button>
           </div>
         </header>
@@ -366,18 +369,18 @@ export function IdeaKanban() {
                                                   <Button
                                                     size="icon"
                                                     variant="ghost"
-                                                    className="h-6 w-6 opacity-0 group-hover:opacity-100"
+                                                    className="h-6 w-6 opacity-0 group-hover:opacity-100 cursor-pointer"
                                                     asChild
                                                   >
                                                     <MoreHorizontal className="h-3.5 w-3.5" />
                                                   </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent>
-                                                  <DropdownMenuItem onClick={() => handleEditIdea(idea, column.id)}>
-                                                    Edit
+                                                  <DropdownMenuItem onClick={() => handleEditIdea(idea, column.id)} className="cursor-pointer">
+                                                    {t('common.edit')}
                                                   </DropdownMenuItem>
                                                   <DropdownMenuItem
-                                                    className="text-destructive"
+                                                    className="text-destructive cursor-pointer"
                                                     disabled={deleteIdeaMutation.isPending}
                                                     onSelect={() => {
                                                       handleDeleteIdea(
@@ -386,7 +389,7 @@ export function IdeaKanban() {
                                                       )
                                                     }}
                                                   >
-                                                    Delete
+                                                    {t('common.delete')}
                                                   </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                               </DropdownMenu>
@@ -411,7 +414,7 @@ export function IdeaKanban() {
                                 className="w-full border-none! h-12! mt-2.5"
                               >
                                 <Plus className="h-4 w-4" />
-                                New Idea
+                                {t('common.newIdea')}
                               </Button>
 
                               {provided.placeholder}

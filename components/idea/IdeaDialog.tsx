@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils"
 import { IdeaType } from "@/types/idea.type"
 import { ImageObject } from "@/types/post.type"
 import { Shapes } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 import { ContentTextarea } from "../ContentTextarea"
 import { AIAssistant } from "../schedule/AIAssistant"
@@ -32,6 +33,7 @@ export function IdeaDialog({
   onSave,
 }: IdeaDialogProps) {
   const isEdit = !!idea?.id;
+  const t = useTranslations()
   const [title, setTitle] = useState(idea?.title ?? "")
   const [description, setDescription] = useState(idea?.description ?? "")
   const [images, setImages] = useState<ImageObject[]>(idea?.images ?? [])
@@ -74,7 +76,7 @@ export function IdeaDialog({
           <div className="flex min-w-0 flex-1 flex-col">
             <DialogHeader className="shrink-0 flex flex-row items-center justify-between px-5 py-4">
               <DialogTitle className="text-base font-semibold">
-                {isEdit ? "Edit Idea" : "Create Idea"}
+                {isEdit ? t('common.editIdea') : t('common.createIdea')}
               </DialogTitle>
               <div>
                 <Select 
@@ -83,7 +85,7 @@ export function IdeaDialog({
                 >
                   <SelectTrigger className="min-w-[100px] max-w-[135px] gap-1! mr-5 text-sm">
                     <Shapes />
-                    <SelectValue placeholder="Select column" />
+                    <SelectValue placeholder={t('common.selectColumn')} />
                   </SelectTrigger>
                   <SelectContent>
                     {columns?.map((column) => (
@@ -100,23 +102,25 @@ export function IdeaDialog({
 
               <Textarea
                 value={title}
-                placeholder="Give your idea a title"
+                placeholder={t('common.giveYourIdeaATitle')}
                 onChange={(e) => setTitle(e.target.value)}
                 rows={2}
-                className="w-full min-w-0 border-0 px-0 text-xl! font-semibold
-          shadow-none placeholder:font-semibold bg-transparent! resize-none! whitespace-pre-wrap wrap-break-word
-          overflow-wrap-anywhere overflow-hidden
-          focus-visible:ring-0"
+                className="w-full min-w-0 border-0 px-0 text-xl! font-semibold shadow-none placeholder:font-semibold bg-transparent! resize-none! whitespace-pre-wrap wrap-break-word overflow-wrap-anywhere overflow-hidden focus-visible:ring-0"
               />
 
               <ContentTextarea
                 value={description}
                 onChange={setDescription}
-                placeholder="Everything begins with an idea"
+                placeholder={t('common.everythingBeginsWithAnIdea')}
                 images={images}
                 onImagesChange={setImages}
                 showAIAssistant={true}
                 onAIAssistantClick={() => setShowAI((value) => !value)}
+                onClear={() => {
+                  setDescription("")
+                  setImages([])
+                  setTitle("")
+                }}
               />
             </div>
 
@@ -127,7 +131,8 @@ export function IdeaDialog({
                 onClick={handleSave}
               >
                 {isSaving && <Spinner />}
-                Save Idea</Button>
+                {t('common.saveIdea')}
+              </Button>
             </div>
           </div>
 

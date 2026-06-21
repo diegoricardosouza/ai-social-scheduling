@@ -76,14 +76,35 @@ export function AppSidebar() {
     connectMutation.mutate(channelTypeId);
   }
 
+  const languages = [
+    { code: "pt", label: "Português" },
+    { code: "en", label: "English" },
+    { code: "es", label: "Español" },
+  ];
+
+  const [lang, setLang] = useState(languages[0]);
+
   return (
     <>
       <Sidebar collapsible="icon">
         <SidebarHeader className={cn("p-4", isCollapsed && "p-2")}>
           <div className="flex items-center justify-between">
             <Logo hideName={isCollapsed} />
-            <SidebarTrigger className="hidden md:flex -mx-8 mb-0" />
+
+            {!isCollapsed ? (
+              <div className="flex items-center">
+                <div className="mr-8">
+                  <LocaleSwitcher />
+                </div>
+                <SidebarTrigger className="hidden md:flex -mx-8 mb-0" />
+              </div>
+            ) : (
+                <SidebarTrigger className="hidden md:flex -mx-8 mb-0" />
+            )}
+
+            
           </div>
+          
           <Button
             className="mt-4 w-full"
             size={isCollapsed ? "icon" : "lg"}
@@ -223,11 +244,11 @@ export function AppSidebar() {
             <span className="text-sm">{user?.fullName || user?.primaryEmailAddress?.emailAddress}</span>
           </div>
 
-          {!isCollapsed && (
+          {/* {!isCollapsed && (
             <div className="pt-2 border-t border-border">
               <LocaleSwitcher />
             </div>
-          )}
+          )} */}
         </SidebarFooter>
       </Sidebar>
 

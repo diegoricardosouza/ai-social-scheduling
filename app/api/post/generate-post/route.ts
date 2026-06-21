@@ -6,6 +6,12 @@ import { NextRequest, NextResponse } from "next/server";
 const ACTIONS = ["generate", "rephrase", "shorten", "expand"] as const;
 type ActionType = (typeof ACTIONS)[number];
 
+const LOCALE_LANGUAGE: Record<string, string> = {
+  'pt-BR': 'Brazilian Portuguese',
+  'en': 'English',
+  'es': 'Spanish',
+};
+
 export async function POST(request: NextRequest) {
   try {
     const { has, userId } = await auth();
@@ -22,8 +28,11 @@ export async function POST(request: NextRequest) {
       action,
       content = "",
       prompt = "",
-      channelId
+      channelId,
+      locale = 'pt-BR'
     } = await request.json()
+
+    const language = LOCALE_LANGUAGE[locale] ?? 'Brazilian Portuguese';
 
     if (!ACTIONS.includes(action as ActionType)) {
       return NextResponse.json({ error: "Invalid action" }, { status: 400 })
@@ -59,7 +68,7 @@ export async function POST(request: NextRequest) {
       messages: [
         {
           role: "system",
-          content: buildSystemPrompt(channelType, characterLimit)
+          content: buildSystemPrompt(channelType, characterLimit, language)
         }, {
           role: "user",
           content: buildPrompt(action, content, prompt),
@@ -74,13 +83,14 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function buildSystemPrompt(channelType?: string, characterLimit?: number) {
+function buildSystemPrompt(channelType?: string, characterLimit?: number, language?: string) {
   const system_prompt = [
     "You are a social media writing assistant.",
     "Return only the final post text.",
     "Do not add quotes, labels, bullet points, or explanations.",
     "Do not use markdown formatting like **, *, #, or backticks.",
     "Return plain text only.",
+    `Always respond in ${language ?? 'Brazilian Portuguese'}.`, // ← novo
   ]
   if (channelType) {
     system_prompt.push(`Write for ${channelType}. Match the platform's tone, style, and expected length. and relevant hashtags. `);

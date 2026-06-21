@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import { ImageObject } from "@/types/post.type"
 import { EmojiPicker } from "@ferrucc-io/emoji-picker"
 import { Eraser, ImagePlus, SmileIcon, Wand2Icon, X } from "lucide-react"
+import { useTranslations } from "next-intl"
 import * as React from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { Separator } from "./ui/separator"
@@ -51,6 +52,7 @@ export function ContentTextarea({
   const textareaRef = React.useRef<HTMLTextAreaElement>(null)
   const [isUploading, setIsUploading] = React.useState(false)
   const [emojiOpen, setEmojiOpen] = React.useState(false)
+  const t = useTranslations()
 
   const insertEmoji = (emoji: string) => {
     if (disabled) return
@@ -83,7 +85,7 @@ export function ContentTextarea({
           method: "POST",
           body: formData,
         })
-        if (!response.ok) throw new Error("Upload failed")
+        if (!response.ok) throw new Error(t('common.uploadFailed'))
         const result = await response.json()
         if (result.image) {
           newImages.push({
@@ -166,8 +168,8 @@ export function ContentTextarea({
             ) : (
               <ImagePlus className="h-5 w-5 text-muted-foreground mb-1" />
             )}
-            <span className="text-sm text-muted-foreground">
-              {isUploading ? "Uploading..." : "Select File"}
+            <span className="text-sm text-muted-foreground text-center block leading-[17px]!">
+              {isUploading ? (t('common.uploading') + "...") : t('common.selectFile')}
             </span>
           </div>
           <input
@@ -244,7 +246,7 @@ export function ContentTextarea({
                   disabled={disabled}
                 >
                   <Wand2Icon className="h-3.5 w-3.5" />
-                  AI Assistant
+                  {t('common.aiAssistant')}
                 </Button>
                 <Separator orientation="vertical" className="mx-0 my-1.5" />
               </>
@@ -256,7 +258,7 @@ export function ContentTextarea({
               onClick={handleClear}
             >
               <Eraser className="h-3.5 w-3.5" />
-              Clear
+              {t('common.clear')}
             </Button>
           </div>
           {renderToolbarRight && (

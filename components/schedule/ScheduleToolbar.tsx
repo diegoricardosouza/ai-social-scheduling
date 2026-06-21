@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { ChannelType } from "@/types/channel.type";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, Copy, LayoutGrid } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { ChannelAvatar } from "../ChannelAvatar";
 
@@ -25,14 +26,6 @@ interface ScheduleToolbarProps {
   selectedStatus: string;
   setSelectedStatus: (status: string | any) => void;
 }
-
-const statusOptions = [
-  { id: "all", label: "All Posts" },
-  { id: "draft", label: "Drafts" },
-  { id: "queue", label: "Queue" },
-  { id: "published", label: "Published" },
-  { id: "failed", label: "Failed" },
-];
 
 export function ScheduleToolbar({
   viewType = "calendar",
@@ -50,6 +43,15 @@ export function ScheduleToolbar({
     },
   });
   const connectedChannels = channelsData?.channels || [];
+  const t = useTranslations()
+
+  const statusOptions = [
+    { id: "all", label: t('common.allPosts') },
+    { id: "draft", label: t('common.draft') },
+    { id: "queue", label: t('common.queue') },
+    { id: "published", label: t('common.published') },
+    { id: "failed", label: t('common.failed') },
+  ];
 
   return (
     <div className="flex items-center gap-2">
@@ -61,7 +63,7 @@ export function ScheduleToolbar({
             <Button variant="ghost" size="lg" className="h-8 gap-1 cursor-pointer">
               <Copy className="h-3.5 w-3.5" />
               <span className="font-medium text-sm text-muted-foreground!">
-                {statusOptions.find((s) => s.id === selectedStatus)?.label || "All Posts"}
+                {statusOptions.find((s) => s.id === selectedStatus)?.label || t('common.allPosts')}
               </span>
               <ChevronDown className="h-3.5 w-3.5" />
             </Button>
@@ -95,7 +97,7 @@ export function ScheduleToolbar({
           <Button variant="ghost" size="lg" className="h-8 gap-1 cursor-pointer">
             <LayoutGrid className="h-3.5 w-3.5" />
             <span className="font-medium text-sm text-muted-foreground!">
-              Channels
+              {t('common.channels')}
             </span>
             {channelIds && channelIds?.length > 0 && (
               <Badge variant="default" className="size-4!">
@@ -108,12 +110,12 @@ export function ScheduleToolbar({
         <PopoverContent className="w-86 p-0" align="end">
           <Command>
             <CommandList>
-              <CommandGroup heading="Connected Channels">
+              <CommandGroup heading={t('common.connectedChannels')}>
                 {connectedChannels?.length === 0 ? (
                   <div className="py-4 px-2 text-center">
-                    <p className="text-xs text-muted-foreground mb-3">No channels connected</p>
+                    <p className="text-xs text-muted-foreground mb-3">{t('common.nochannelsconnected')}</p>
                     <Button size="sm" className="w-fit px-5" asChild>
-                      <Link href="/settings">Connect Channel</Link>
+                      <Link href="/settings">{t('common.connectChannel')}</Link>
                     </Button>
                   </div>
                 ) : (
@@ -121,7 +123,7 @@ export function ScheduleToolbar({
                     <CommandItem
                       key={channel.id}
                       onSelect={() => toggleChannel(channel.user_channel_id!)}
-                      className="flex items-center justify-between gap-2 px-2 py-1.5"
+                      className="flex items-center justify-between gap-2 px-2 py-1.5 cursor-pointer"
                     >
                       <ChannelAvatar
                         size="sm"
@@ -134,7 +136,7 @@ export function ScheduleToolbar({
 
                       <Checkbox
                         checked={channelIds.includes(channel.user_channel_id!)}
-                        className="border-black!"
+                        className="border-black! cursor-pointer"
                       />
                     </CommandItem>
                   ))

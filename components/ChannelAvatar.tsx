@@ -34,7 +34,7 @@ export function ChannelAvatar({
         className={cn(size === "sm" ? "size-8" : "size-10", "border")}
       >
         <AvatarFallback>LM</AvatarFallback>
-        <AvatarImage src={profileImage || "./images/avatar.webp"} className="rounded-xl!" />
+        <AvatarImage src={profileImage || "/images/avatar.webp"} className="rounded-xl!" />
         {icon ? (
           <div
             className={cn(

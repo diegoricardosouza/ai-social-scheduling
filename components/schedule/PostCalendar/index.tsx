@@ -2,8 +2,7 @@
 "use client"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { addHours, format, getDay, isBefore, parse, startOfDay, startOfWeek } from "date-fns"
-import { enUS } from "date-fns/locale"
-import { ChevronLeft, ChevronRight, Plus, } from "lucide-react"
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react"
 import * as React from "react"
 import { Calendar, dateFnsLocalizer, Views } from "react-big-calendar"
 
@@ -13,18 +12,11 @@ import "./post-calendar.css"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getChannelIcon } from "@/constants/channels"
+import { capitalize } from "@/lib/capitalize"
+import { getDateFnsLocale } from "@/lib/date-fns-locale"
 import { cn } from "@/lib/utils"
 import { PostType } from "@/types/post.type"
-
-const locales = { "en-US": enUS }
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-})
-
+import { useLocale, useTranslations } from "next-intl"
 
 interface PostCalendarProps {
   posts: PostType[]
@@ -49,6 +41,17 @@ export function PostCalendar({
   onCreatePost,
   rightActions,
 }: PostCalendarProps) {
+  const t = useTranslations()
+  const locale = useLocale()
+  const dateFnsLocale = getDateFnsLocale(locale)
+
+  const localizer = React.useMemo(() => dateFnsLocalizer({
+    format,
+    parse,
+    startOfWeek: (date: Date) => startOfWeek(date, { locale: dateFnsLocale }),
+    getDay,
+    locales: { [locale]: dateFnsLocale },
+  }), [locale, dateFnsLocale])
 
   const events = React.useMemo(() =>
     isPending ? [] : posts.map(p => ({
@@ -61,11 +64,12 @@ export function PostCalendar({
 
   const formats = React.useMemo(() => ({
     weekdayFormat: (date: Date, culture?: string, localizer?: any) =>
-      localizer.format(date, 'EEEE', culture),
-
+      capitalize(localizer.format(date, 'EEEE', culture)),
     dayFormat: (date: Date, culture?: string, localizer?: any) =>
-      localizer.format(date, 'EEEE d', culture),
-  }), []);
+      capitalize(localizer.format(date, 'EEEE d', culture)),
+    monthHeaderFormat: (date: Date, culture?: string, localizer?: any) =>
+      capitalize(localizer.format(date, 'MMMM yyyy', culture)),
+  }), [])
 
   const isWeekView = view === "week"
 
@@ -84,11 +88,11 @@ export function PostCalendar({
             </div>
 
             <span className="text-base font-semibold">
-              {format(toolbar.date, "MMMM yyyy")}
+              {capitalize(format(toolbar.date, "MMMM yyyy", { locale: dateFnsLocale }))}
             </span>
 
             <Button variant="outline" size="sm" className="font-medium" onClick={() => toolbar.onNavigate('TODAY')}>
-              Today
+              {t('common.today')}
             </Button>
 
             <select
@@ -96,8 +100,8 @@ export function PostCalendar({
               value={view}
               onChange={(e) => onViewChange(e.target.value)}
             >
-              <option value="month">Month</option>
-              <option value="week">Week</option>
+              <option value="month">{t('common.month')}</option>
+              <option value="week">{t('common.week')}</option>
             </select>
           </div>
 
@@ -116,6 +120,7 @@ export function PostCalendar({
         events={events}
         date={currentDate}
         formats={formats}
+        culture={locale}
         step={isWeekView ? 15 : 60}
         timeslots={10}
         min={new Date(2026, 0, 1, 0, 0)}
@@ -124,10 +129,6 @@ export function PostCalendar({
         view={view === "month" ? Views.MONTH : Views.WEEK}
         onView={(v) => onViewChange(v === Views.MONTH ? "month" : "week")}
         onSelectEvent={(event: any) => onPostClick(event)}
-        //onSelectSlot={({ start }) => onCreatePost(start)}
-
-        // In week view, disable past time slots 
-        // and style them differently
         slotPropGetter={(date) => {
           const isPastSlot = isBefore(date, new Date())
           return isPastSlot
@@ -140,7 +141,6 @@ export function PostCalendar({
             }
             : {}
         }}
-        // In month view, disable past dates and style them differently
         dayPropGetter={(date: Date) => {
           const isPastDate = isBefore(date, new Date())
           return {
@@ -150,28 +150,28 @@ export function PostCalendar({
         }}
         components={{
           toolbar: CustomToolbar,
-          // Customize event rendering to show channel icons and better styling
           event: ({ event }) => {
             const channel = event.user_channels?.channel_types
             const Icon = getChannelIcon(channel?.type || undefined)
             const color = channel?.color || "#000000"
             return (
-              <>
-                <div
-                  className="flex items-center gap-2 px-2 py-1 h-full"
-                  style={{ backgroundColor: color + "20", borderLeft: `3px solid ${color}` }}
-                  onClick={() => onPostClick(event)}
-                >
-                  {Icon && <HugeiconsIcon
+              <div
+                className="flex items-center gap-2 px-2 py-1 h-full"
+                style={{ backgroundColor: color + "20", borderLeft: `3px solid ${color}` }}
+                onClick={() => onPostClick(event)}
+              >
+                {Icon && (
+                  <HugeiconsIcon
                     icon={Icon}
                     className="shrink-0 text-white! size-4! p-0.5 rounded-sm"
-                    style={{
-                      background: color
-                    }} />}
-                  <span className="text-xs truncate max-w-[100px]">{event?.title}</span>
-                  <span className="font-semibold">{format(event.scheduled_at, "h:mm a")}</span>
-                </div>
-              </>
+                    style={{ background: color }}
+                  />
+                )}
+                <span className="text-xs truncate max-w-[100px]">{event?.title}</span>
+                <span className="font-semibold">
+                  {format(new Date(event.scheduled_at), "h:mm a", { locale: dateFnsLocale })}
+                </span>
+              </div>
             )
           },
 
@@ -201,7 +201,6 @@ export function PostCalendar({
                         <Plus className="size-3" />
                       </Button>
                     )}
-
                   </div>
                   {isPending && <Skeleton className="h-8 w-11/12 m-2 my-5" />}
                 </>

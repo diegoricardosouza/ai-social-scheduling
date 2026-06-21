@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils"
 import { useSubscription } from "@clerk/nextjs/experimental"
 import { useMutation } from "@tanstack/react-query"
 import { Check, Sparkles, X } from "lucide-react"
+import { useTranslations } from "next-intl"
 import Link from "next/link"
 import { useState } from "react"
 import { toast } from "sonner"
@@ -21,6 +22,7 @@ interface GenerateIdeasPopoverProps {
 }
 
 export function GenerateIdeasPopover({ onGenerated }: GenerateIdeasPopoverProps) {
+  const t = useTranslations()
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState(1)
 
@@ -49,7 +51,7 @@ export function GenerateIdeasPopover({ onGenerated }: GenerateIdeasPopoverProps)
         body: JSON.stringify({ businessType, targetAudience }),
       })
       if (!res.ok) {
-        throw new Error("Failed to generate ideas")
+        throw new Error(t('errors.failedToGenerateIdeas'))
       }
       return res.json()
     },
@@ -59,13 +61,13 @@ export function GenerateIdeasPopover({ onGenerated }: GenerateIdeasPopoverProps)
     },
     onError: (error) => {
       console.error("Generation error:", error)
-      toast.error("Failed to generate ideas. Please try again.")
+      toast.error(t('errors.failedToGenerateIdeasTryAgain'))
     }
   })
 
   const handleGenerate = () => {
     if (!businessType || !targetAudience) {
-      toast.error("Please provide both business type and target audience")
+      toast.error(t('errors.pleaseProvideBothFields'))
       return
     }
     generateMutation.mutate({
@@ -90,10 +92,9 @@ export function GenerateIdeasPopover({ onGenerated }: GenerateIdeasPopoverProps)
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="gap-2 
-        bg-linear-to-r from-[#b0ec9c33] to-[#d1bdff33]">
+        <Button variant="outline" className="gap-2 bg-linear-to-r from-[#b0ec9c33] to-[#d1bdff33] cursor-pointer">
           <Sparkles className="h-4 w-4" />
-          Generate Ideas
+          {t('common.generateIdeas')}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-100 p-4 shadow-lg" align="end">
@@ -101,12 +102,12 @@ export function GenerateIdeasPopover({ onGenerated }: GenerateIdeasPopoverProps)
           <div 
             className="mb-4 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200"
           >
-            <p className="text-sm font-medium">AI idea generation requires an upgrade</p>
+            <p className="text-sm font-medium">{t('common.aiRequiresUpgrade')}</p>
             <p className="mt-1 text-sm text-amber-800/80 dark:text-amber-200/80">
               <Link href="/billing" className="underline underline-offset-4">
-                Upgrade
+                {t('common.upgrade')}
               </Link>{" "}
-              to Pro or Premium to generate ideas with AI.
+              {t('common.toProPremium')}
             </p>
           </div>
         )}
@@ -114,28 +115,28 @@ export function GenerateIdeasPopover({ onGenerated }: GenerateIdeasPopoverProps)
         {step === 1 && (
           <div className="space-y-4">
             <div>
-              <h3 className="font-semibold mb-2">Generate Content Ideas</h3>
+              <h3 className="font-semibold mb-2">{t('common.generateContentIdeas')}</h3>
               <p className="text-sm text-muted-foreground">
-                Tell us about your business to get personalized content ideas.
+                {t('common.tellUsAboutYourBusiness')}
               </p>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="text-sm font-medium mb-1 block">Business Type</label>
+                <label className="text-sm font-medium mb-1 block">{t('common.businessType')}</label>
                 <Textarea
                   value={businessType}
                   onChange={(e) => setBusinessType(e.target.value)}
-                  placeholder="e.g., fitness brand"
+                  placeholder={t('common.egFitnessBrand')}
                   disabled={!canUseAI}
                 />
               </div>
               <div>
-                <label className="text-sm font-medium mb-1 block">Target Audience</label>
+                <label className="text-sm font-medium mb-1 block">{t('common.targetAudience')}</label>
                 <Textarea
                   value={targetAudience}
                   onChange={(e) => setTargetAudience(e.target.value)}
-                  placeholder="e.g., busy professionals"
+                  placeholder={t('common.egBusyProfessionals')}
                   disabled={!canUseAI}
                 />
               </div>
@@ -150,12 +151,12 @@ export function GenerateIdeasPopover({ onGenerated }: GenerateIdeasPopoverProps)
               {generateMutation.isPending ? (
                 <>
                   <Spinner />
-                  Generating...
+                  {t('common.generating')}...
                 </>
               ) : (
                 <>
                   <Sparkles className="h-4 w-4" />
-                  Generate Ideas
+                  {t('common.generateIdeas')}
                 </>
               )}
             </Button>
@@ -165,9 +166,9 @@ export function GenerateIdeasPopover({ onGenerated }: GenerateIdeasPopoverProps)
         {step === 2 && (
           <div className="space-y-4">
             <div>
-              <h3 className="font-semibold mb-2">Generated Ideas</h3>
+              <h3 className="font-semibold mb-2">{t('common.generateIdeas')}</h3>
               <p className="text-sm text-muted-foreground">
-                Select an idea to add to your board.
+                {t('common.selectIdeaToYourBoard')}
               </p>
             </div>
 
@@ -213,7 +214,7 @@ export function GenerateIdeasPopover({ onGenerated }: GenerateIdeasPopoverProps)
                 className="flex-1 gap-2"
               >
                 <X className="h-4 w-4" />
-                Back
+                {t('common.back')}
               </Button>
               <Button
                 onClick={handleUseIdea}
@@ -221,7 +222,7 @@ export function GenerateIdeasPopover({ onGenerated }: GenerateIdeasPopoverProps)
                 size="lg"
 
               >
-                Use Idea
+                {t('common.useIdea')}
               </Button>
             </div>
           </div>

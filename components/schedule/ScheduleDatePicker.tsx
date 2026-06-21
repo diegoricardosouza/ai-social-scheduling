@@ -15,7 +15,10 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
+import { capitalize } from "@/lib/capitalize"
+import { getDateFnsLocale } from "@/lib/date-fns-locale"
 import { addMinutes, format, isBefore, isSameDay, startOfDay } from "date-fns"
+import { useLocale, useTranslations } from "next-intl"
 
 interface ScheduleDatePickerProps {
   date: Date | undefined
@@ -49,7 +52,9 @@ export function ScheduleDatePicker({
 }: ScheduleDatePickerProps) {
   const [open, setOpen] = React.useState(false)
   const today = React.useMemo(() => startOfDay(new Date()), [])
-
+  const t = useTranslations()
+  const locale = useLocale()
+  const dateFnsLocale = getDateFnsLocale(locale)
 
   const availableTimeOptions = React.useMemo(() => {
     if (!date || !isSameDay(date, new Date())) return timeOptions
@@ -86,11 +91,11 @@ export function ScheduleDatePicker({
     <>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button size="lg" className={cn("px-4", className)} variant="outline">
+          <Button size="lg" className={cn("px-4 cursor-pointer", className)} variant="outline">
             <span className="flex-1 flex items-center gap-2 text-sm">
               <CalendarDays className="size-4" />
               <span className="flex items-center gap-1.5 font-semibold">
-                {date ? format(date, "MMMM d") : "Set Date & Time"}
+                {date ? format(date, "d MMMM", { locale: dateFnsLocale }) : t('common.setDateTime')}
                 {date && time && <span className="text-muted-foreground">, {time}</span>}
               </span>
             </span>
@@ -105,8 +110,10 @@ export function ScheduleDatePicker({
               onSelect={setDate}
               disabled={{ before: today }}
               className="p-0 w-full"
+              locale={dateFnsLocale}
               formatters={{
-                formatWeekdayName: (date) => date.toLocaleDateString('en-US', { weekday: 'narrow' })
+                formatWeekdayName: (date) => date.toLocaleDateString(locale, { weekday: 'narrow' }),
+                formatCaption: (date) => capitalize(format(date, "MMMM yyyy", { locale: dateFnsLocale })),
               }}
               classNames={{
                 month_caption: "flex justify-start items-center h-9 ml-2",
@@ -130,15 +137,15 @@ export function ScheduleDatePicker({
             />
 
             <div className="space-y-1">
-              <h4 className="text-[13px] font-semibold text-foreground/70">Select Time</h4>
+              <h4 className="text-[13px] font-semibold text-foreground/70">{t('common.selectTime')}</h4>
               <div className="flex items-center gap-2">
                 <Select value={time} onValueChange={handleTimeChange}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select time" />
+                  <SelectTrigger className="w-full cursor-pointer">
+                    <SelectValue placeholder={t('common.selectTime')} />
                   </SelectTrigger>
                   <SelectContent position="popper" className="max-h-[200px]">
                     {availableTimeOptions.map((time) => (
-                      <SelectItem key={time} value={time}>
+                      <SelectItem key={time} value={time} className="cursor-pointer">
                         <Clock className="size-3" />
                         {time}
                       </SelectItem>
@@ -152,7 +159,7 @@ export function ScheduleDatePicker({
           <div className="flex items-center justify-end p-4 border-t bg-muted/5">
             <Button size="lg" className="" onClick={() => setOpen(false)}>
               <Check className="size-4" />
-              Done
+              {t('common.done')}
             </Button>
           </div>
         </PopoverContent>

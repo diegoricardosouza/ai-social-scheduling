@@ -1,31 +1,34 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
+/* eslint-disable @next/next/no-img-element */
+import { Button } from '@/components/ui/button';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { usePathname, useRouter } from '@/i18n/navigation';
+import { abbrevLanguage } from '@/lib/mapper';
+import { cn } from '@/lib/utils';
+import { ChevronDown, Globe } from 'lucide-react';
 import { useLocale } from 'next-intl';
 
 const locales = [
   {
     code: 'pt-BR',
     label: 'Português',
-    flag: 'https://flagcdn.com/w20/br.png',
+    flag: 'https://flagcdn.com/h40/br.png',
   },
   {
     code: 'en',
     label: 'English',
-    flag: 'https://flagcdn.com/w20/us.png',
+    flag: 'https://flagcdn.com/h40/us.png',
   },
   {
     code: 'es',
     label: 'Español',
-    flag: 'https://flagcdn.com/w20/es.png',
+    flag: 'https://flagcdn.com/h40/es.png',
   },
 ] as const;
 
@@ -41,39 +44,47 @@ export function LocaleSwitcher() {
   const current = locales.find((l) => l.code === locale);
 
   return (
-    <Select value={locale} onValueChange={handleChange}>
-      <SelectTrigger className="w-full cursor-pointer">
-        <SelectValue>
-          <span className="flex items-center gap-2">
-            {current && (
-              <img
-                src={current.flag}
-                alt={current.label}
-                width={20}
-                height={15}
-                className="object-cover"
-              />
-            )}
-            <span className="text-sm">{current?.label}</span>
-          </span>
-        </SelectValue>
-      </SelectTrigger>
-      <SelectContent>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 gap-1 px-2 text-xs cursor-pointer hover:bg-sidebar-accent"
+          aria-label="Selecionar idioma"
+        >
+          {current ? (
+            <img
+              src={current.flag}
+              alt={current.label}
+              width={18}
+              height={18}
+              className="object-cover rounded-full h-[18px]!"
+            />
+          ) : (
+            <Globe className="h-3.5 w-3.5" />
+          )}
+          <span className="uppercase">{abbrevLanguage(current?.code || 'pt-br') ?? abbrevLanguage(locale)}</span>
+          <ChevronDown className="h-3 w-3 opacity-60" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
         {locales.map((l) => (
-          <SelectItem key={l.code} value={l.code} className='cursor-pointer'>
-            <span className="flex items-center gap-2">
-              <img
-                src={l.flag}
-                alt={l.label}
-                width={20}
-                height={15}
-                className="object-cover"
-              />
-              <span>{l.label}</span>
-            </span>
-          </SelectItem>
+          <DropdownMenuItem
+            key={l.code}
+            onClick={() => handleChange(l.code)}
+            className={cn("cursor-pointer gap-2", l.code === locale && "bg-sidebar-accent")}
+          >
+            <img
+              src={l.flag}
+              alt={l.label}
+              width={18}
+              height={18}
+              className="object-cover rounded-full h-[18px]!"
+            />
+            <span>{l.label}</span>
+          </DropdownMenuItem>
         ))}
-      </SelectContent>
-    </Select>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

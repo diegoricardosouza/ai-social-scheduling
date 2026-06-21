@@ -23,6 +23,7 @@ import {
   ScanEye,
   Wand2,
 } from "lucide-react"
+import { useTranslations } from "next-intl"
 import * as React from "react"
 import { toast } from "sonner"
 import { ContentTextarea } from "../ContentTextarea"
@@ -48,12 +49,6 @@ interface EditPostDialogProps {
 
 type ActionTabType = "ideas" | "ai" | "preview"
 
-const rightTabs = [
-  { id: "ideas" as ActionTabType, label: "Ideas", icon: Lightbulb },
-  { id: "ai" as ActionTabType, label: "AI Assistant", icon: Wand2 },
-  { id: "preview" as ActionTabType, label: "Preview", icon: ScanEye },
-]
-
 export function EditPostDialog({
   open,
   onOpenChange,
@@ -61,6 +56,13 @@ export function EditPostDialog({
 }: EditPostDialogProps) {
 
   const queryClient = useQueryClient();
+  const t = useTranslations()
+
+  const rightTabs = [
+    { id: "ideas" as ActionTabType, label: t('common.ideas'), icon: Lightbulb },
+    { id: "ai" as ActionTabType, label: t('common.aiAssistant'), icon: Wand2 },
+    { id: "preview" as ActionTabType, label: t('common.preview'), icon: ScanEye },
+  ]
 
   const updatePostMutation = useMutation({
     mutationFn: async ({ postId, content, images, scheduledAt, status }: {
@@ -85,7 +87,11 @@ export function EditPostDialog({
       return response.json();
     },
     onSuccess: (data, variables) => {
-      toast.success(`Post ${variables.status === POST_STATUS.DRAFT ? "saved to drafts" : "rescheduled"} successfully!`);
+      toast.success(
+        variables.status === POST_STATUS.DRAFT
+          ? t('success.postSavedToDrafts')
+          : t('success.postRescheduled')
+      )
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       onOpenChange(false);
     },
@@ -159,7 +165,7 @@ export function EditPostDialog({
         <div>
           <DialogHeader className="px-8 py-4 border-b">
             <div className="flex items-center justify-between">
-              <DialogTitle className="text-lg font-semibold">Edit Post</DialogTitle>
+              <DialogTitle className="text-lg font-semibold">{t('common.editPost')}</DialogTitle>
               <div className="flex items-center gap-px">
                 {rightTabs.map((tab) => (
                   <Button
@@ -268,7 +274,7 @@ export function EditPostDialog({
               disabled={updatePostMutation.isPending}
             >
               {updatePostMutation.isPending && updatePostMutation.variables?.status === POST_STATUS.DRAFT && <Spinner />}
-              Save Draft
+              {t('common.saveDraft')}
             </Button>
             <ButtonGroup className="p-0!">
               <ScheduleDatePicker
@@ -278,7 +284,7 @@ export function EditPostDialog({
                   className="border py-4.5 px-4"
                   onClick={() => {
                     if (isDatePassed || isTimeNotAvailable) {
-                      toast.error("Please select a valid time")
+                      toast.error(t('common.pleaseSelectValidDateAndTime'))
                       return;
                     }
                     handleUpdate()
@@ -286,7 +292,7 @@ export function EditPostDialog({
                   disabled={updatePostMutation.isPending || !date || !time || isTimeNotAvailable || isDatePassed}
                 >
                   {updatePostMutation.isPending && updatePostMutation.variables?.status === undefined && <Spinner />}
-                  Schedule Post
+                  {t('common.schedulePost')}
                 </Button>}
               />
             </ButtonGroup>
